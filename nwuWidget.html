@@ -32,7 +32,6 @@
     <input type="text" id="sourceString" class="form-textbox" value="">
     <script type="text/javascript">
 
-        var result = {}
         function callNSFASCheck(studentId, displayName) {
             jQuery.ajax({
                 url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=10600485&displayname=WERQ",
@@ -95,6 +94,10 @@
         // always subscribe to ready event and implement widget related code
         // inside callback function , it is the best practice while developing widgets
         JFCustomWidget.subscribe("ready", function (data) {
+            var result = {
+                valid:false,
+                value:""
+            };
             var studentName = JFCustomWidget.getWidgetSetting("studentNumber");
             var displayName = JFCustomWidget.getWidgetSetting("displayName");
 
