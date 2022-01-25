@@ -26,14 +26,14 @@
                     }
                     else {
                         console.log("Fail");
-                        result.valid = false;
-                        result.value = "Not a valid student"
+                        data.valid = false;
+                        data.value = "Not a valid student"
                     }
                 },
                 error: function (response) {
                     console.log(response);
-                    result.valid = false;
-                    result.value = "NSFASCheck check failed";
+                    data.valid = false;
+                    data.value = "NSFASCheck check failed";
                 }
             })
         }
@@ -46,19 +46,19 @@
                     console.log(response);
                     if (response.result === "PLACED" && response.errorcode === "Success") {
                         console.log("Pass");
-                        result.valid = true;
-                        result.value = "Valid student and all checks passed";
+                        data.valid = true;
+                        data.value = "Valid student and all checks passed";
                     }
                     else {
                         console.log("Fail");
-                        result.valid = false;
-                        result.value = "Valid student but failed Resident Placement";
+                        data.valid = false;
+                        data.value = "Valid student but failed Resident Placement";
                     }
                 },
                 error: function (response) {
                     console.log(response);
-                    result.valid = false;
-                    result.value = "Resident Placement check failed";
+                    data.valid = false;
+                    data.value = "Resident Placement check failed";
                 }
             })
         }
@@ -74,7 +74,9 @@
 
         // always subscribe to ready event and implement widget related code
         // inside callback function , it is the best practice while developing widgets
-        JFCustomWidget.subscribe("ready", function (data) {
+        JFCustomWidget.subscribe("ready", function (callback) {
+            var data = callback;
+            console.log(data)
             var studentName = JFCustomWidget.getWidgetSetting("studentNumber");
             var displayName = JFCustomWidget.getWidgetSetting("displayName");
 
@@ -83,15 +85,17 @@
 
             callNSFASCheck(studentName, displayName);
 
+            JFCustomWidget.sendData(data);
+
             // var widget = new nwuWidget();
             // widget.init(data);
-            console.log(result)
+            //console.log(result)
 
             //JFCustomWidget.sendSubmit(result)
 
             //this is the submit event to get and return the data to jotform
             JFCustomWidget.subscribe("submit", function () {
-                JFCustomWidget.sendData(result);
+                
             });
 
             //this is if you wish to send data to the widget from elsewhere on the form
