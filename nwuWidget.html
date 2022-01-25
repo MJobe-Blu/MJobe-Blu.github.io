@@ -94,10 +94,7 @@
         // always subscribe to ready event and implement widget related code
         // inside callback function , it is the best practice while developing widgets
         JFCustomWidget.subscribe("ready", function (data) {
-            var result = {
-                valid:false,
-                value:""
-            };
+            var result = data
             var studentName = JFCustomWidget.getWidgetSetting("studentNumber");
             var displayName = JFCustomWidget.getWidgetSetting("displayName");
 
