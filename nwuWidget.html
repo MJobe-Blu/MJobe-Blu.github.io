@@ -32,6 +32,7 @@
     <input type="text" id="sourceString" class="form-textbox" value="">
     <script type="text/javascript">
 
+        var result = {}
         function callNSFASCheck(studentId, displayName) {
             jQuery.ajax({
                 url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=10600485&displayname=WERQ",
@@ -94,9 +95,11 @@
         // always subscribe to ready event and implement widget related code
         // inside callback function , it is the best practice while developing widgets
         JFCustomWidget.subscribe("ready", function (data) {
-            var result = {}
             var studentName = JFCustomWidget.getWidgetSetting("studentNumber");
             var displayName = JFCustomWidget.getWidgetSetting("displayName");
+
+            console.log(studentName);
+            console.log(displayName)
 
             callNSFASCheck(studentName, displayName);
 
@@ -104,11 +107,11 @@
             // widget.init(data);
             console.log(result)
 
-            JFCustomWidget.sendSubmit(result)
+            //JFCustomWidget.sendSubmit(result)
 
             //this is the submit event to get and return the data to jotform
             JFCustomWidget.subscribe("submit", function () {
-                //JFCustomWidget.sendData(msg);
+                JFCustomWidget.sendData(result);
             });
 
             //this is if you wish to send data to the widget from elsewhere on the form
