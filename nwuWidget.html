@@ -45,16 +45,16 @@
                     }
                     else {
                         console.log("Fail");
-                        result.valid = false;
-                        result.value = "Not a valid student"
-                        console.log(result)
+                        msg.valid = false;
+                        msg.value = "Not a valid student"
+                        console.log(msg)
                         console.log("Not a valid student")
                     }
                 },
                 error: function (response) {
                     console.log(response);
-                    result.valid = false;
-                    result.value = "NSFASCheck check failed";
+                    msg.valid = false;
+                    msg.value = "NSFASCheck check failed";
                 }
             })
         }
@@ -67,19 +67,19 @@
                     console.log(response);
                     if (response.result === "PLACED" && response.errorcode === "Success") {
                         console.log("Pass");
-                        result.valid = true;
-                        result.value = "Valid student and all checks passed";
+                        msg.valid = true;
+                        msg.value = "Valid student and all checks passed";
                     }
                     else {
                         console.log("Fail");
-                        result.valid = false;
-                        result.value = "Valid student but failed Resident Placement";
+                        msg.valid = false;
+                        msg.value = "Valid student but failed Resident Placement";
                     }
                 },
                 error: function (response) {
                     console.log(response);
-                    result.valid = false;
-                    result.value = "Resident Placement check failed";
+                    msg.valid = false;
+                    msg.value = "Resident Placement check failed";
                 }
             })
         }
@@ -95,35 +95,42 @@
 
         // always subscribe to ready event and implement widget related code
         // inside callback function , it is the best practice while developing widgets
-        JFCustomWidget.subscribe("ready", function (data) {
+
+        JFCustomWidget.subscribe("ready", function () {
             var result = data
             var studentName = JFCustomWidget.getWidgetSetting("studentNumber");
             var displayName = JFCustomWidget.getWidgetSetting("displayName");
 
             console.log(studentName);
             console.log(displayName)
-
-            callNSFASCheck(studentName, displayName);
-
-            // var widget = new nwuWidget();
-            // widget.init(data);
-            //console.log(result)
-
-            //JFCustomWidget.sendSubmit(result)
-
-            //this is the submit event to get and return the data to jotform
+            //subscribe to form submit event
             JFCustomWidget.subscribe("submit", function () {
-                JFCustomWidget.sendData(result);
+                var msg = {
+                    //you should valid attribute to data for JotForm
+                    //to be able to use youw widget as required
+                    valid: false,
+                    value: ""
+                }
+
+                callNSFASCheck(studentName, displayName);
+                // send value to JotForm
+                JFCustomWidget.sendData(msg);
             });
 
-            //this is if you wish to send data to the widget from elsewhere on the form
+                // var widget = new nwuWidget();
+                // widget.init(data);
+                //console.log(result)
 
-            //JFCustomWidget.subscribe('populate', widget.fillConditionValue);
+                //JFCustomWidget.sendSubmit(result)
 
-            //this is if you wish to send data to other fields on the form, here using the label of the field
+                //this is if you wish to send data to the widget from elsewhere on the form
 
-            //JFCustomWidget.setFieldsValueByLabel(widget.setupFieldData);
-        });
+                //JFCustomWidget.subscribe('populate', widget.fillConditionValue);
+
+                //this is if you wish to send data to other fields on the form, here using the label of the field
+
+                //JFCustomWidget.setFieldsValueByLabel(widget.setupFieldData);
+            });
 
     </script>
 </body>
