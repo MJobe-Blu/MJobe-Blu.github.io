@@ -13,27 +13,32 @@
     <h1>Test1</h1>
     <script type="text/javascript">
 
+
+        var valid = false;
+
+        //determining valid is important
         function callNSFASCheck(studentId, displayName) {
             jQuery.ajax({
                 url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=10600485&displayname=WERQ",
                 //url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=" + studentId + "&displayname=" + displayName,
+                method: "GET",
                 success: function (response) {
                     console.log(response);
                     //add result.info to array [1] and return it
                     if (response.result === "YES" && response.errorcode === "Success") {
                         console.log("Pass");
-                        callResidentPlacement(studentId, displayName)
+                        return callResidentPlacement(studentId, displayName)
                     }
                     else {
                         console.log("Fail");
-                        data.valid = false;
-                        data.value = "Not a valid student"
+                        valid = false;
+                        return "Not a valid student"
                     }
                 },
                 error: function (response) {
                     console.log(response);
-                    data.valid = false;
-                    data.value = "NSFASCheck check failed";
+                    valid = false;
+                    return "NSFASCheck check failed";
                 }
             })
         }
@@ -42,69 +47,46 @@
             jQuery.ajax({
                 url: "https://mwr.nwu.ac.za/msmigrate/migrate/placecheck?nwunumber=10600485&displayname=WERQ",
                 //url: "https://mwr.nwu.ac.za/msmigrate/migrate/placecheck?nwunumber=" + studentId + "&displayname=" + displayName,
+                method: "GET",
                 success: function (response) {
                     console.log(response);
                     if (response.result === "PLACED" && response.errorcode === "Success") {
                         console.log("Pass");
-                        data.valid = true;
-                        data.value = "Valid student and all checks passed";
+                        valid = true;
+                        return "Valid student and all checks passed";
                     }
                     else {
                         console.log("Fail");
-                        data.valid = false;
-                        data.value = "Valid student but failed Resident Placement";
+                        valid = false;
+                        return "Valid student but failed Resident Placement";
                     }
                 },
                 error: function (response) {
                     console.log(response);
-                    data.valid = false;
-                    data.value = "Resident Placement check failed";
+                    valid = false;
+                    return "Resident Placement check failed";
                 }
             })
         }
 
-        // function nwuWidget() {
-        //     this.init = init;
-        //     // initialization of the widget
-        //     function init(formData) {
 
-        //         // send data to Jotform on change input
-        //     }
-        // }
+        //subscrive to ready
+        JFCustomWidget.subscribe("ready", function (msg) {
+            console.log("ready message arrived from JotForm", msg);
+        });
 
-        // always subscribe to ready event and implement widget related code
-        // inside callback function , it is the best practice while developing widgets
-        JFCustomWidget.subscribe("ready", function (callback) {
-            var data = callback;
-            console.log(data)
-            var studentName = JFCustomWidget.getWidgetSetting("studentNumber");
-            var displayName = JFCustomWidget.getWidgetSetting("displayName");
-
-            console.log(studentName);
-            console.log(displayName)
-
-            callNSFASCheck(studentName, displayName);
-
+        //subscribe to submit
+        JFCustomWidget.subscribe("submit", function (msg) {
+            var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
+            var jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
+            
+            var data = {
+                value: callNSFASCheck(jotFormStudentName, jotFormDisplayName),
+                //if you dont send valid data or send it true for every submit
+                //your widget cannot be make required
+                valid: valid
+            }
             JFCustomWidget.sendData(data);
-
-            // var widget = new nwuWidget();
-            // widget.init(data);
-            //console.log(result)
-
-            //JFCustomWidget.sendSubmit(result)
-
-            //this is the submit event to get and return the data to jotform
-            JFCustomWidget.subscribe("submit", function () {
-                
-            });
-
-            //this is if you wish to send data to the widget from elsewhere on the form
-
-            //JFCustomWidget.subscribe('populate', widget.fillConditionValue);
-
-            //this is if you wish to send data to other fields on the form, here using the label of the field
-
-            //JFCustomWidget.setFieldsValueByLabel(widget.setupFieldData);
         });
 
     </script>
