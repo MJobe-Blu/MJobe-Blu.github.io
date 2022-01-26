@@ -79,13 +79,17 @@
         JFCustomWidget.subscribe("submit", function (msg) {
             var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
             var jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
-            
+
+            console.log(jotFormStudentName)
+            console.log(jotFormDisplayName)
+
             var data = {
                 value: callNSFASCheck(jotFormStudentName, jotFormDisplayName),
                 //if you dont send valid data or send it true for every submit
                 //your widget cannot be make required
                 valid: valid
             }
+            console.log(data)
             JFCustomWidget.sendData(data);
         });
 
