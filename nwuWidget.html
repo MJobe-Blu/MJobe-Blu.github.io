@@ -28,18 +28,18 @@
                     //add result.info to array [1] and return it
                     if (response.result === "YES" && response.errorcode === "Success") {
                         console.log("Pass");
-                        callResidentPlacement(studentId, displayName)
+                        return callResidentPlacement(studentId, displayName)
                     }
                     else {
                         console.log("Fail");
                         valid = false;
-                        value = "Not a valid student"
+                        return "Not a valid student"
                     }
                 },
                 error: function (response) {
                     console.log(response);
                     valid = false;
-                    value = "NSFASCheck check failed";
+                    return "NSFASCheck check failed";
                 }
             })
         }
@@ -54,18 +54,18 @@
                     if (response.result === "PLACED" && response.errorcode === "Success") {
                         console.log("Pass");
                         valid = true;
-                        value = "Valid student and all checks passed";
+                        return "Valid student and all checks passed";
                     }
                     else {
                         console.log("Fail");
                         valid = false;
-                        value = "Valid student but failed Resident Placement";
+                        return "Valid student but failed Resident Placement";
                     }
                 },
                 error: function (response) {
                     console.log(response);
                     valid = false;
-                    value = "Resident Placement check failed";
+                    return "Resident Placement check failed";
                 }
             })
         }
@@ -85,13 +85,13 @@
             console.log(jotFormDisplayName)
 
             var data = {
-                value: value,
+                value: "",
                 //if you dont send valid data or send it true for every submit
                 //your widget cannot be make required
                 valid: valid
             }
             console.log(data)
-            console.log(data.value = "Test")
+            console.log(data.value = callNSFASCheck(jotFormStudentName, jotFormDisplayName))
             console.log(data)
             JFCustomWidget.sendData(data);
         });
