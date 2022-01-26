@@ -15,6 +15,7 @@
 
 
         var valid = false;
+        var value;
 
         //determining valid is important
         function callNSFASCheck(studentId, displayName) {
@@ -27,18 +28,18 @@
                     //add result.info to array [1] and return it
                     if (response.result === "YES" && response.errorcode === "Success") {
                         console.log("Pass");
-                        return callResidentPlacement(studentId, displayName)
+                        callResidentPlacement(studentId, displayName)
                     }
                     else {
                         console.log("Fail");
                         valid = false;
-                        return "Not a valid student"
+                        value = "Not a valid student"
                     }
                 },
                 error: function (response) {
                     console.log(response);
                     valid = false;
-                    return "NSFASCheck check failed";
+                    value = "NSFASCheck check failed";
                 }
             })
         }
@@ -53,18 +54,18 @@
                     if (response.result === "PLACED" && response.errorcode === "Success") {
                         console.log("Pass");
                         valid = true;
-                        return "Valid student and all checks passed";
+                        value = "Valid student and all checks passed";
                     }
                     else {
                         console.log("Fail");
                         valid = false;
-                        return "Valid student but failed Resident Placement";
+                        value = "Valid student but failed Resident Placement";
                     }
                 },
                 error: function (response) {
                     console.log(response);
                     valid = false;
-                    return "Resident Placement check failed";
+                    value = "Resident Placement check failed";
                 }
             })
         }
@@ -84,7 +85,7 @@
             console.log(jotFormDisplayName)
 
             var data = {
-                value: callNSFASCheck(jotFormStudentName, jotFormDisplayName),
+                value: value,
                 //if you dont send valid data or send it true for every submit
                 //your widget cannot be make required
                 valid: valid
