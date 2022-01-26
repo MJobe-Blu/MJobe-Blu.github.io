@@ -42,7 +42,7 @@
                 error: function (response) {
                     console.log(response);
                     valid = false;
-                    value = "NSFASCheck check failed";
+                    value = "NSFAS Check  failed";
                 }
             })
         }
@@ -65,7 +65,7 @@
                     else {
                         console.log("Fail");
                         valid = false;
-                        value = "Valid student but failed Resident Placement";
+                        value = "Valid student but failed Resident Placement check";
                     }
                 },
                 error: function (response) {
@@ -99,7 +99,7 @@
                 //your widget cannot be make required
                 valid: valid
             }
-            console.log(data)
+            alert(data.value)
             JFCustomWidget.sendData(data);
         });
 
