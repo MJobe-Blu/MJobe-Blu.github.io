@@ -19,9 +19,10 @@
 
         //determining valid is important
         function callNSFASCheck(studentId, displayName) {
+            console.log("https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=" + studentId + "&displayname=" + displayName)
             jQuery.ajax({
-                url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=10600485&displayname=WERQ",
-                //url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=" + studentId + "&displayname=" + displayName,
+                //url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=10600485&displayname=WERQ",
+                url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=" + studentId + "&displayname=" + displayName,
                 method: "GET",
                 async: false,
                 timeout: 10000,
@@ -30,7 +31,7 @@
                     //add result.info to array [1] and return it
                     if (response.result === "YES" && response.errorcode === "Success") {
                         console.log("Pass");
-                        return callResidentPlacement(studentId, displayName)
+                        callResidentPlacement(studentId, displayName)
                     }
                     else {
                         console.log("Fail");
@@ -47,9 +48,10 @@
         }
 
         function callResidentPlacement(studentId, displayName) {
+            console.log("https://mwr.nwu.ac.za/msmigrate/migrate/placecheck?nwunumber=" + studentId + "&displayname=" + displayName)
             jQuery.ajax({
-                url: "https://mwr.nwu.ac.za/msmigrate/migrate/placecheck?nwunumber=10600485&displayname=WERQ",
-                //url: "https://mwr.nwu.ac.za/msmigrate/migrate/placecheck?nwunumber=" + studentId + "&displayname=" + displayName,
+                //url: "https://mwr.nwu.ac.za/msmigrate/migrate/placecheck?nwunumber=10600485&displayname=WERQ",
+                url: "https://mwr.nwu.ac.za/msmigrate/migrate/placecheck?nwunumber=" + studentId + "&displayname=" + displayName,
                 method: "GET",
                 async: false,
                 timeout: 10000,
