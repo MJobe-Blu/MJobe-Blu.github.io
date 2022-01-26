@@ -57,7 +57,7 @@
                 timeout: 10000,
                 success: function (response) {
                     console.log(response);
-                    if (response.result === "PLACED" && response.errorcode === "Success") {
+                    if (response.result === "NOTPLACED" && response.errorcode === "Success") {
                         console.log("Pass");
                         valid = true;
                         value = "Valid student and all checks passed";
