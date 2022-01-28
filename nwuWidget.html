@@ -1,4 +1,5 @@
-
+<!DOCTYPE html>
+<html>
 
 <head>
     <script src="https://js.jotform.com/JotFormCustomWidget.min.js"></script>
@@ -87,18 +88,17 @@
             var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
             var jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
 
-            console.log(parent.document)
-            //console.log(parent.getElementById("input_116"))
+            // console.log(document.getElementById("input_116"))
+            // console.log(parent.getElementById("input_116"))
 
             //alert(parent.document.getElementsByClassName("input_117").value)
+            console.log(window.document)
 
         console.log(jotFormStudentName)
         console.log(jotFormDisplayName)
 
         console.log(data)
         callNSFASCheck(jotFormStudentName, jotFormDisplayName)
-
-        wid
 
         var data = {
             value: value,
@@ -112,3 +112,5 @@
 
     </script>
 </body>
+
+</html>
