@@ -87,26 +87,37 @@
         //subscrive to ready
         JFCustomWidget.subscribe("ready", function (msg) {
             console.log("ready message arrived from JotForm", msg);
-            console.log(JFCustomWidget.getFieldsValueById("input_117"))
-            console.log(JFCustomWidget.getFieldsValueById("#input_117"))
-            console.log(JFCustomWidget.getFieldsValueByName("q117_studentNumber"))
-            console.log(JFCustomWidget.getFieldsValueByName("studentNumber"))
+            var fields = ['studentNumber']; // you can add more fields using Field Details Unique Name
+            // get values from the necessary fields
+          JFCustomWidget.getFieldsValueByName(fields, function(res) {
+            var data = res.data;
+            userID = data[0].value;
             
-            console.log(window.JFCustomWidget.getFieldsValueById("input_117"))
-            console.log(window.JFCustomWidget.getFieldsValueById("#input_117"))
-            console.log(window.JFCustomWidget.getFieldsValueByName("q117_studentNumber"))
-            console.log(window.JFCustomWidget.getFieldsValueByName("studentNumber"))
+            if (userID) {
+              console.log('The value of the UserID field:', userID);
+              /**
+               * Your code here
+               */
+            }
+          });
+            // console.log(JFCustomWidget.getFieldsValueById("input_117"))
+            // console.log(JFCustomWidget.getFieldsValueById("#input_117"))
+            // console.log(JFCustomWidget.getFieldsValueByName("q117_studentNumber"))
+            // console.log(JFCustomWidget.getFieldsValueByName("studentNumber"))
+            
+            // console.log(window.JFCustomWidget.getFieldsValueById("input_117"))
+            // console.log(window.JFCustomWidget.getFieldsValueById("#input_117"))
+            // console.log(window.JFCustomWidget.getFieldsValueByName("q117_studentNumber"))
+            // console.log(window.JFCustomWidget.getFieldsValueByName("studentNumber"))
 
-            console.log(window.JFCustomWidget.getFieldsValueById("input_116"))
-            console.log(window.JFCustomWidget.getFieldsValueById("#input_116"))
-            console.log(window.JFCustomWidget.getFieldsValueByName("typeA116"))
+            // console.log(window.JFCustomWidget.getFieldsValueById("input_116"))
+            // console.log(window.JFCustomWidget.getFieldsValueById("#input_116"))
+            // console.log(window.JFCustomWidget.getFieldsValueByName("typeA116"))
 
-
-
-            console.log(JSON.parse(window.JFCustomWidget.getFieldsValueById("input_117")))
-            console.log(JSON.parse(window.JFCustomWidget.getFieldsValueById("#input_117")))
-            console.log(JSON.parse(window.JFCustomWidget.getFieldsValueByName("q117_studentNumber")))
-            console.log(JSON.parse(window.JFCustomWidget.getFieldsValueByName("studentNumber")))
+            // console.log(JSON.parse(window.JFCustomWidget.getFieldsValueById("input_117")))
+            // console.log(JSON.parse(window.JFCustomWidget.getFieldsValueById("#input_117")))
+            // console.log(JSON.parse(window.JFCustomWidget.getFieldsValueByName("q117_studentNumber")))
+            // console.log(JSON.parse(window.JFCustomWidget.getFieldsValueByName("studentNumber")))
         });
 
         //subscribe to submit
