@@ -88,18 +88,6 @@
         //subscrive to ready
         JFCustomWidget.subscribe("ready", function (msg) {
             console.log("ready message arrived from JotForm", msg);
-        });
-
-        //subscribe to submit
-        JFCustomWidget.subscribe("submit", function (msg) {
-            var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
-            var jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
-
-            // console.log(document.getElementById("input_116"))
-            // console.log(parent.getElementById("input_116"))
-
-            //alert(parent.document.getElementsByClassName("input_117").value)
-
             console.log(JFCustomWidget.getFieldsValueById("input_117"))
             console.log(JFCustomWidget.getFieldsValueById("#input_117"))
             console.log(JFCustomWidget.getFieldsValueByName("q117_studentNumber"))
@@ -115,6 +103,17 @@
             console.log(JSON.parse(window.JFCustomWidget.getFieldsValueById("#input_117")))
             console.log(JSON.parse(window.JFCustomWidget.getFieldsValueByName("q117_studentNumber")))
             console.log(JSON.parse(window.JFCustomWidget.getFieldsValueByName("studentNumber")))
+        });
+
+        //subscribe to submit
+        JFCustomWidget.subscribe("submit", function (msg) {
+            var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
+            var jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
+
+            // console.log(document.getElementById("input_116"))
+            // console.log(parent.getElementById("input_116"))
+
+            //alert(parent.document.getElementsByClassName("input_117").value)
 
 
         console.log(jotFormStudentName)
