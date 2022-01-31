@@ -103,6 +103,7 @@
                     //jotFormDisplayName = userDisplayName
                     // var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
                     jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
+                    callNSFASCheck(jotFormStudentName, jotFormDisplayName)
                 }
                 else {
                     console.log("Could not retrieve values from fields")
@@ -119,7 +120,7 @@
             console.log(jotFormDisplayName)
 
             console.log(data)
-            callNSFASCheck(jotFormStudentName, jotFormDisplayName)
+            
 
             var data = {
                 value: value,
