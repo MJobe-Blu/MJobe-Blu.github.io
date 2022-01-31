@@ -5,12 +5,12 @@
     <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
-        (function() {
-          var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-          po.src = '//js.jotform.com/JotFormCustomWidget.min.js?onload=onLoadCallback';
-          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+        (function () {
+            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+            po.src = '//js.jotform.com/JotFormCustomWidget.min.js?onload=onLoadCallback';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
         })();
-      </script>
+    </script>
 </head>
 <style>
 </style>
@@ -87,64 +87,37 @@
         //subscrive to ready
         JFCustomWidget.subscribe("ready", function (msg) {
             console.log("ready message arrived from JotForm", msg);
-            var fields = ['studentNumber']; // you can add more fields using Field Details Unique Name
+            var fields = ['studentNumber', 'displayName']; // you can add more fields using Field Details Unique Name
             // get values from the necessary fields
-          JFCustomWidget.getFieldsValueByName(fields, function(res) {
-            var data = res.data;
-            userID = data[0].value;
-            
-            if (userID) {
-              console.log('The value of the UserID field:', userID);
-              /**
-               * Your code here
-               */
-            }
-          });
-            // console.log(JFCustomWidget.getFieldsValueById("input_117"))
-            // console.log(JFCustomWidget.getFieldsValueById("#input_117"))
-            // console.log(JFCustomWidget.getFieldsValueByName("q117_studentNumber"))
-            // console.log(JFCustomWidget.getFieldsValueByName("studentNumber"))
-            
-            // console.log(window.JFCustomWidget.getFieldsValueById("input_117"))
-            // console.log(window.JFCustomWidget.getFieldsValueById("#input_117"))
-            // console.log(window.JFCustomWidget.getFieldsValueByName("q117_studentNumber"))
-            // console.log(window.JFCustomWidget.getFieldsValueByName("studentNumber"))
+            JFCustomWidget.getFieldsValueByName(fields, function (res) {
+                var dataFromFields = res.data;
+                userID = dataFromFields[0].value;
 
-            // console.log(window.JFCustomWidget.getFieldsValueById("input_116"))
-            // console.log(window.JFCustomWidget.getFieldsValueById("#input_116"))
-            // console.log(window.JFCustomWidget.getFieldsValueByName("typeA116"))
-
-            // console.log(JSON.parse(window.JFCustomWidget.getFieldsValueById("input_117")))
-            // console.log(JSON.parse(window.JFCustomWidget.getFieldsValueById("#input_117")))
-            // console.log(JSON.parse(window.JFCustomWidget.getFieldsValueByName("q117_studentNumber")))
-            // console.log(JSON.parse(window.JFCustomWidget.getFieldsValueByName("studentNumber")))
+                if (userID) {
+                    console.log('The value of the UserID field:', userID);
+                    var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
+                    var jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
+                }
+            });
         });
 
         //subscribe to submit
         JFCustomWidget.subscribe("submit", function (msg) {
-            var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
-            var jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
 
-            // console.log(document.getElementById("input_116"))
-            // console.log(parent.getElementById("input_116"))
+            console.log(jotFormStudentName)
+            console.log(jotFormDisplayName)
 
-            //alert(parent.document.getElementsByClassName("input_117").value)
+            console.log(data)
+            callNSFASCheck(jotFormStudentName, jotFormDisplayName)
 
-
-        console.log(jotFormStudentName)
-        console.log(jotFormDisplayName)
-
-        console.log(data)
-        callNSFASCheck(jotFormStudentName, jotFormDisplayName)
-
-        var data = {
-            value: value,
-            //if you dont send valid data or send it true for every submit
-            //your widget cannot be make required
-            valid: valid
-        }
-        console.log(data.value)
-        JFCustomWidget.sendData(data);
+            var data = {
+                value: value,
+                //if you dont send valid data or send it true for every submit
+                //your widget cannot be make required
+                valid: valid
+            }
+            console.log(data.value)
+            JFCustomWidget.sendData(data);
         });
 
     </script>
