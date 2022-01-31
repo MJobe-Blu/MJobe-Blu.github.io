@@ -80,7 +80,7 @@
                 error: function (response) {
                     console.log(response);
                     valid = false;
-                    value = "Resident Placement check failed";
+                    value = "Check failed";
                 }
             })
         }
@@ -100,9 +100,9 @@
                     console.log('The value of the Student Number field:', userStudentNumber);
                     console.log('The value of the Display Name field:', userDisplayName);
                     jotFormStudentName = userStudentNumber
-                    jotFormDisplayName = userDisplayName
+                    //jotFormDisplayName = userDisplayName
                     // var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
-                    // var jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
+                    jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
                 }
                 else {
                     console.log("Could not retrieve values from fields")
