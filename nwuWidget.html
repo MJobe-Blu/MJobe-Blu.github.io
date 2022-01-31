@@ -94,7 +94,7 @@
                 userStudentNumber = dataFromFields[0].value;
                 userDisplayName = dataFromFields[1].value;
 
-                if (userID) {
+                if (userStudentNumber != undefined && userDisplayName != undefined) {
                     console.log('The value of the Student Number field:', userStudentNumber);
                     console.log('The value of the Display Name field:', userDisplayName);
                     var jotFormStudentName = userStudentNumber
