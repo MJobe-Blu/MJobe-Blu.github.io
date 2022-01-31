@@ -89,6 +89,10 @@
         //subscrive to ready
         JFCustomWidget.subscribe("ready", function (msg) {
             console.log("ready message arrived from JotForm", msg);
+        });
+
+        //subscribe to submit
+        JFCustomWidget.subscribe("submit", function (msg) {
             var fields = ['studentNumber', 'displayName']; // you can add more fields using Field Details Unique Name
             // get values from the necessary fields
             JFCustomWidget.getFieldsValueByName(fields, function (res) {
@@ -110,10 +114,6 @@
                     value = "Valid student but failed Resident Placement check";
                 }
             });
-        });
-
-        //subscribe to submit
-        JFCustomWidget.subscribe("submit", function (msg) {
 
             console.log(jotFormStudentName)
             console.log(jotFormDisplayName)
