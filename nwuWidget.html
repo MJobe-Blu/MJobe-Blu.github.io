@@ -91,12 +91,16 @@
             // get values from the necessary fields
             JFCustomWidget.getFieldsValueByName(fields, function (res) {
                 var dataFromFields = res.data;
-                userID = dataFromFields[0].value;
+                userStudentNumber = dataFromFields[0].value;
+                userDisplayName = dataFromFields[1].value;
 
                 if (userID) {
-                    console.log('The value of the UserID field:', userID);
-                    var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
-                    var jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
+                    console.log('The value of the Student Number field:', userStudentNumber);
+                    console.log('The value of the Display Name field:', userDisplayName);
+                    var jotFormStudentName = userStudentNumber
+                    var jotFormDisplayName = userDisplayName
+                    // var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
+                    // var jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
                 }
             });
         });
