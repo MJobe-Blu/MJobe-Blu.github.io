@@ -114,6 +114,10 @@
 
         //subscribe to submit
         JFCustomWidget.subscribe("submit", function (msg) {
+            var setErrorMessage = ['errorMessage']
+            JFCustomWidget.setFieldsValueByName(setErrorMessage, function (res) {
+                console.log(res)
+            });
 
             console.log(jotFormStudentName)
             console.log(jotFormDisplayName)
