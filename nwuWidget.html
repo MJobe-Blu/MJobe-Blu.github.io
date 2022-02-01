@@ -101,7 +101,7 @@
                 valid: valid
             }
             console.log(data.value)
-            JFCustomWidget.sendData(data);
+            JFCustomWidget.sendSubmit(data);
         }
 
         //subscrive to ready
@@ -141,8 +141,8 @@
             //subscribe to submit
             JFCustomWidget.subscribe("submit", function (msg) {
 
-                console.log(jotFormStudentName)
-                console.log(jotFormDisplayName)
+                // console.log(jotFormStudentName)
+                // console.log(jotFormDisplayName)
             });
 
             JFCustomWidget.subscribe('populate', fillConditionValue);
