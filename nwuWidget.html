@@ -25,35 +25,40 @@
         var value;
         var jotFormStudentName;
         var jotFormDisplayName;
+        var callFinished = false;
 
         //determining valid is important
         function callNSFASCheck(studentId, displayName) {
-            console.log("https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=" + studentId + "&displayname=" + displayName)
-            jQuery.ajax({
-                //url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=10600485&displayname=WERQ",
-                url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=" + studentId + "&displayname=" + displayName,
-                method: "GET",
-                async: false,
-                timeout: 10000,
-                success: function (response) {
-                    console.log(response);
-                    //add result.info to array [1] and return it
-                    if (response.result === "YES" && response.errorcode === "Success") {
-                        console.log("Pass");
-                        callResidentPlacement(studentId, displayName)
-                    }
-                    else {
-                        console.log("Fail");
+            if (callFinished === false) {
+                console.log("https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=" + studentId + "&displayname=" + displayName)
+                jQuery.ajax({
+                    //url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=10600485&displayname=WERQ",
+                    url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=" + studentId + "&displayname=" + displayName,
+                    method: "GET",
+                    async: false,
+                    timeout: 10000,
+                    success: function (response) {
+                        console.log(response);
+                        //add result.info to array [1] and return it
+                        if (response.result === "YES" && response.errorcode === "Success") {
+                            console.log("Pass");
+                            callResidentPlacement(studentId, displayName)
+                        }
+                        else {
+                            console.log("Fail");
+                            valid = true;
+                            value = "Not a valid student";
+                            callFinished = true
+                        }
+                    },
+                    error: function (response) {
+                        console.log(response);
                         valid = true;
-                        value = "Not a valid student";
+                        value = "NSFAS Check failed";
+                        callFinished = true;
                     }
-                },
-                error: function (response) {
-                    console.log(response);
-                    valid = true;
-                    value = "NSFAS Check failed";
-                }
-            })
+                })
+            }
         }
 
         function callResidentPlacement(studentId, displayName) {
@@ -70,17 +75,20 @@
                         console.log("Pass");
                         valid = true;
                         value = "Valid student and all checks passed";
+                        callFinished = true;
                     }
                     else {
                         console.log("Fail");
                         valid = true;
                         value = "Valid student but failed Resident Placement check";
+                        callFinished = true;
                     }
                 },
                 error: function (response) {
                     console.log(response);
                     valid = true;
                     value = "Check failed";
+                    callFinished = true;
                 }
             })
         }
