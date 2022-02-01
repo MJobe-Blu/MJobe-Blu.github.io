@@ -138,16 +138,16 @@
 
 
             // });
-            //subscribe to submit
-            JFCustomWidget.subscribe("submit", function (msg) {
 
-                // console.log(jotFormStudentName)
-                // console.log(jotFormDisplayName)
-            });
+        });
+        //subscribe to submit
+        JFCustomWidget.subscribe("submit", function (msg) {
 
-            JFCustomWidget.subscribe('populate', fillConditionValue);
+            // console.log(jotFormStudentName)
+            // console.log(jotFormDisplayName)
         });
 
+        JFCustomWidget.subscribe('populate', fillConditionValue);
     </script>
 </body>
 
