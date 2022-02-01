@@ -44,13 +44,13 @@
                     }
                     else {
                         console.log("Fail");
-                        valid = false;
+                        valid = true;
                         value = "Not a valid student";
                     }
                 },
                 error: function (response) {
                     console.log(response);
-                    valid = false;
+                    valid = true;
                     value = "NSFAS Check failed";
                 }
             })
@@ -73,13 +73,13 @@
                     }
                     else {
                         console.log("Fail");
-                        valid = false;
+                        valid = true;
                         value = "Valid student but failed Resident Placement check";
                     }
                 },
                 error: function (response) {
                     console.log(response);
-                    valid = false;
+                    valid = true;
                     value = "Check failed";
                 }
             })
