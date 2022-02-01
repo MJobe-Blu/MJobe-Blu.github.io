@@ -90,6 +90,8 @@
             //input.val(inputValue.split(","));
             inputValue = inputValue.split(",")
             JFCustomWidget.hideWidgetError();
+            console.log(inputValue[0])
+            console.log(inputValue[1])
             callNSFASCheck(inputValue[0], inputValue[1]);
 
             var data = {
@@ -133,7 +135,7 @@
             //     }
 
 
-           // });
+            // });
             //subscribe to submit
             JFCustomWidget.subscribe("submit", function (msg) {
 
