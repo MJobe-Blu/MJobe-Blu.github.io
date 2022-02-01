@@ -102,7 +102,7 @@
             console.log(inputValue[1])
             jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
 
-            callNSFASCheck(inputValue[0], jotFormDisplayName);
+            await callNSFASCheck(inputValue[0], jotFormDisplayName);
 
             var data = {
                 value: value,
