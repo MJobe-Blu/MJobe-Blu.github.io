@@ -17,7 +17,7 @@
 
 <body>
     <span id="labelText"></span>
-    <h1>Test1</h1>
+    <h1>Loading.....</h1>
     <script type="text/javascript">
 
 
@@ -146,16 +146,16 @@
 
 
             // });
+            //subscribe to submit
+            JFCustomWidget.subscribe("submit", function (msg) {
+
+                // console.log(jotFormStudentName)
+                // console.log(jotFormDisplayName)
+            });
+
+            JFCustomWidget.subscribe('populate', fillConditionValue);
 
         });
-        //subscribe to submit
-        JFCustomWidget.subscribe("submit", function (msg) {
-
-            // console.log(jotFormStudentName)
-            // console.log(jotFormDisplayName)
-        });
-
-        JFCustomWidget.subscribe('populate', fillConditionValue);
     </script>
 </body>
 
