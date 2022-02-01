@@ -103,7 +103,13 @@
                     //jotFormDisplayName = userDisplayName
                     // var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
                     jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
-                    callNSFASCheck(jotFormStudentName, jotFormDisplayName)
+                    callNSFASCheck(jotFormStudentName, jotFormDisplayName);
+                    var data = {
+                        value: value,
+                        valid: valid
+                    }
+                    console.log(data.value)
+                    JFCustomWidget.sendData(data);
                 }
                 else {
                     console.log("Could not retrieve values from fields")
@@ -121,12 +127,6 @@
 
             console.log(data)
 
-            var data = {
-                value: value,
-                valid: valid
-            }
-            console.log(data.value)
-            JFCustomWidget.sendData(data);
         });
 
     </script>
