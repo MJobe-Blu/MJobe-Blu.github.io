@@ -85,6 +85,12 @@
             })
         }
 
+        function fillConditionValue(data) {
+            var inputValue = data.value || '';
+            input.val(inputValue.split(","));
+            console.log(inputValue.split(","))
+            JFCustomWidget.hideWidgetError();
+        }
 
         //subscrive to ready
         JFCustomWidget.subscribe("ready", function (msg) {
@@ -104,6 +110,7 @@
                     // var jotFormStudentName = JFCustomWidget.getWidgetSetting("studentNumber");
                     jotFormDisplayName = JFCustomWidget.getWidgetSetting("displayName");
                     callNSFASCheck(jotFormStudentName, jotFormDisplayName);
+
                     var data = {
                         value: value,
                         valid: valid
@@ -115,18 +122,28 @@
                     console.log("Could not retrieve values from fields")
                     valid = false;
                     value = "Valid student but failed Resident Placement check";
+
+                    var data = {
+                        value: value,
+                        valid: valid
+                    }
+                    console.log(data.value)
+                    JFCustomWidget.sendData(data);
                 }
+
+
             });
-        });
+            //subscribe to submit
+            JFCustomWidget.subscribe("submit", function (msg) {
 
-        //subscribe to submit
-        JFCustomWidget.subscribe("submit", function (msg) {
+                console.log(jotFormStudentName)
+                console.log(jotFormDisplayName)
 
-            console.log(jotFormStudentName)
-            console.log(jotFormDisplayName)
+                console.log(data)
 
-            console.log(data)
+            });
 
+            JFCustomWidget.subscribe('populate', fillConditionValue);
         });
 
     </script>
