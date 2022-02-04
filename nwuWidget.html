@@ -52,6 +52,7 @@
                             valid = true;
                             value = "Not a valid student";
                             callFinished = true
+                            return
                         }
                     },
                     error: function (response) {
@@ -59,6 +60,7 @@
                         valid = true;
                         value = "NSFAS Check failed";
                         callFinished = true;
+                        return
                     }
                 })
             }
@@ -79,12 +81,14 @@
                         valid = true;
                         value = "Valid student and all checks passed";
                         callFinished = true;
+                        return
                     }
                     else {
                         console.log("Fail");
                         valid = true;
                         value = "Valid student but failed Resident Placement check";
                         callFinished = true;
+                        return
                     }
                 },
                 error: function (response) {
@@ -92,6 +96,7 @@
                     valid = true;
                     value = "Resident Placement Check failed";
                     callFinished = true;
+                    return
                 }
             })
         }
