@@ -19,10 +19,7 @@
     <span id="labelText"></span>
     <h1>Loading.....</h1>
     <script type="text/javascript">
-        var url = "https://mwr.nwu.ac.za/jf/rpf.html";
-        setTimeout(function () {
-            window.location.replace(url);
-        }, 40000);
+
 
         var valid = "false";
         var value;
@@ -39,7 +36,7 @@
                     url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=" + studentId + "&displayname=" + displayName,
                     method: "GET",
                     async: false,
-                    timeout: setTimeout,
+                    timeout: 30000,
                     success: function (response) {
                         console.log(response);
                         //add result.info to array [1] and return it
@@ -52,7 +49,6 @@
                             valid = true;
                             value = "Not a valid student";
                             callFinished = true
-                            return
                         }
                     },
                     error: function (response) {
@@ -60,7 +56,6 @@
                         valid = true;
                         value = "NSFAS Check failed";
                         callFinished = true;
-                        return
                     }
                 })
             }
@@ -73,7 +68,7 @@
                 url: "https://mwr.nwu.ac.za/msmigrate/migrate/placecheck?nwunumber=" + studentId + "&displayname=" + displayName,
                 method: "GET",
                 async: false,
-                timeout: setTimeout,
+                timeout: 30000,
                 success: function (response) {
                     console.log(response);
                     if (response.result === "NOTPLACED" && response.errorcode === "Success") {
@@ -81,14 +76,12 @@
                         valid = true;
                         value = "Valid student and all checks passed";
                         callFinished = true;
-                        return
                     }
                     else {
                         console.log("Fail");
                         valid = true;
                         value = "Valid student but failed Resident Placement check";
                         callFinished = true;
-                        return
                     }
                 },
                 error: function (response) {
@@ -96,7 +89,6 @@
                     valid = true;
                     value = "Resident Placement Check failed";
                     callFinished = true;
-                    return
                 }
             })
         }
