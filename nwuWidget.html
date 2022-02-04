@@ -4,13 +4,13 @@
 <head>
     <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         (function () {
             var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
             po.src = '//js.jotform.com/JotFormCustomWidget.min.js?onload=onLoadCallback';
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
         })();
-    </script>
+    </script> -->
 </head>
 <style>
 </style>
@@ -19,9 +19,9 @@
     <span id="labelText"></span>
     <h1>Loading.....</h1>
     <script type="text/javascript">
-        setTimeout(function () {
-            window.top.location.href = "https://nwu.jotform.com/220324795702959";
-        }, 40000);
+        // setTimeout(function () {
+        //     window.top.location.href = "https://nwu.jotform.com/220324795702959";
+        // }, 40000);
 
         var valid = "false";
         var value;
@@ -38,7 +38,7 @@
                     url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=" + studentId + "&displayname=" + displayName,
                     method: "GET",
                     async: false,
-                    timeout: setTimeout,
+                    timeout: 40000,
                     success: function (response) {
                         console.log(response);
                         //add result.info to array [1] and return it
@@ -50,7 +50,7 @@
                             console.log("Fail");
                             valid = true;
                             value = "Not a valid student";
-                            callFinished = true
+                            callFinished = true;
                             return
                         }
                     },
@@ -72,7 +72,7 @@
                 url: "https://mwr.nwu.ac.za/msmigrate/migrate/placecheck?nwunumber=" + studentId + "&displayname=" + displayName,
                 method: "GET",
                 async: false,
-                timeout: setTimeout,
+                timeout: 40000,
                 success: function (response) {
                     console.log(response);
                     if (response.result === "NOTPLACED" && response.errorcode === "Success") {
