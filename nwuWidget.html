@@ -19,7 +19,9 @@
     <span id="labelText"></span>
     <h1>Loading.....</h1>
     <script type="text/javascript">
-
+        setTimeout(function () {
+            window.location.reload()
+        }, 40000);
 
         var valid = "false";
         var value;
@@ -36,7 +38,7 @@
                     url: "https://mwr.nwu.ac.za/msmigrate/migrate/othercheck?nwunumber=" + studentId + "&displayname=" + displayName,
                     method: "GET",
                     async: false,
-                    timeout: 30000,
+                    timeout: setTimeout,
                     success: function (response) {
                         console.log(response);
                         //add result.info to array [1] and return it
@@ -68,7 +70,7 @@
                 url: "https://mwr.nwu.ac.za/msmigrate/migrate/placecheck?nwunumber=" + studentId + "&displayname=" + displayName,
                 method: "GET",
                 async: false,
-                timeout: 30000,
+                timeout: setTimeout,
                 success: function (response) {
                     console.log(response);
                     if (response.result === "NOTPLACED" && response.errorcode === "Success") {
