@@ -233,14 +233,14 @@
 
                 // display dropdown for a chosen node
                 function showDropdown(node, level) {
-
                     if (!level) {
                         level = 0;
                     }
 
-                    // elements of level N have all class names with levels 0..N so by removing level X we also remove all levels > X
+                    // Destroy existing Select2 instances and remove previous dropdowns at this level
                     $('#' + containerID + ' select.dd-' + level).select2('destroy');
                     $('#' + containerID + ' select.dd-' + level).remove();
+
                     if (!node || !Object.keys(node.values).length) {
                         resizeIframe();
                         return;
@@ -252,14 +252,10 @@
                     });
 
                     var objectKeys = Object.keys(node.values);
-
-                    // this for save empty space and append to the begin of node
                     var selectEmpty = [];
 
                     for (var index in objectKeys) {
                         var key = objectKeys[index];
-
-                        // if key == select, save key and go to next iteration
                         if (key === "") {
                             selectEmpty.push(key);
                         } else {
@@ -269,7 +265,6 @@
                         }
                     }
 
-                    // append to the end select if exist
                     if (selectEmpty.length > 0) {
                         for (var index in selectEmpty) {
                             $('<option>', {
@@ -278,12 +273,6 @@
                             $dropdown.val($($dropdown.attr("class") + " option:first").val());
                         }
                     }
-
-                    // $dropdown.bind('change', function() {
-                    //   //change to String for object property
-                    //   showDropdown(node.values[changeToString(this.value)], level + 1);
-                    //   updateWidgetValue();
-                    // });
 
                     $dropdown.appendTo('#' + containerID);
 
@@ -294,52 +283,26 @@
                         resizeIframe();
                     }).on("select2:open", function (e) {
                         resizeIframe();
-                        /*
-                        //patch that addresses #4209507. We may need to refactor this to work better rather than firing the iframe resize twice.
-                        if(getAndroidVersion() === '11' || getAndroidVersion() === '12'){
-                          resizeIframe();
-                        }
-                        //end of patch
-                        $('.select2-dropdown').hide();
-                        setTimeout(function() {
-                
-                          var interval;
-                
-                          $('.select2-dropdown').fadeIn('fast', function() {
-                            if (interval) {
-                              clearInterval(interval);
-                            }
-                          });
-                
-                          interval = setInterval(function() {
-                            resizeIframe();
-                          }, 50);
-                        }, 150);
-                        */
                     }).on('select2:select', function (e) {
                         var value = $(this).val();
-
                         if (value) {
                             showDropdown(node.values[changeToString(this.value)], level + 1);
                             updateWidgetValue();
                         }
                     }).on('change.select2', function (e) {
                         var value = $(this).val();
-
                         if (value) {
                             showDropdown(node.values[changeToString(this.value)], level + 1);
                             updateWidgetValue();
                         }
 
                         var indexOfValue = list.map(function (o) { return o.value; }).indexOf(value);
-
                         if (indexOfValue !== -1 && list[indexOfValue].required !== null) {
                             JFCustomWidget.makeWidgetRequired();
                         }
-
                     });
 
-                    // change to String for object property
+                    // Change to String for object property
                     showDropdown(node.values[changeToString($dropdown.val())], level + 1);
 
                     hideEmptySelect();
