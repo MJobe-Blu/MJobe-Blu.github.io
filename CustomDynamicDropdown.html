@@ -313,10 +313,12 @@
                     var bodyHeight = $('body').height();
                     var height = bodyHeight;
 
+                    // Adjust height to accommodate dropdowns
                     var selectDropdownTopOffsetA = (parseInt($('.select2-dropdown').parent().css('top')) || 0);
                     var selectDropdownTopOffsetB = parseInt($('.select2-dropdown').css('top')) || 0;
                     var selectDropdownBottomOffset = parseInt($('.select2-dropdown').css('bottom')) || 0;
 
+                    // Include dropdown offsets in height calculation
                     if (selectDropdownTopOffsetA > 0) {
                         height += selectDropdownTopOffsetA;
                     }
@@ -329,8 +331,9 @@
                         height += Math.abs(selectDropdownBottomOffset);
                     }
 
+                    // Add extra padding or adjustments as needed
                     JFCustomWidget.requestFrameResize({
-                        height: height + 20,
+                        height: height + 100, // Adjust as per your design needs
                     });
                 }
 
