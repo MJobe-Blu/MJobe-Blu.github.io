@@ -338,7 +338,7 @@
             });
 
             JFCustomWidget.subscribe("ready", function (formData) {
-                dynamicDropdown = new CustomDynamicDropdown("dropdownsContainer", formData);
+                var dynamicDropdown = new CustomDynamicDropdown("dropdownsContainer", formData);
                 dynamicDropdown.init();
             });
         });
