@@ -72,9 +72,9 @@
                 function init() {
                     params = JFCustomWidget.getWidgetSettings();
                     console.log("params1:", params);
-                    console.log("params2:", params.list);
+                    console.log("params2:", params.lists);
                     console.log("getWidgetSettings2:", JFCustomWidget.getWidgetSettings())
-                    var tree = parseList(params.list);
+                    var tree = parseList(params.lists);
                     if (Object.entries(tree).length === 0 || tree === null){
                         tree = parseList(params.lists);
                     }
