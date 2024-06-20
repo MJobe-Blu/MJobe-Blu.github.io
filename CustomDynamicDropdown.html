@@ -293,9 +293,39 @@
                 }
 
                 function resizeIframe() {
-                    //if (window.frameElement) {
-                        $(window.frameElement).height($('body').height() + 300);
-                    //}
+                    if (!JFCustomWidget) {
+                        return false;
+                    }
+
+                    var bodyHeight = $('body').height();
+                    var height = bodyHeight;
+
+                    var selectDropdownTopOffsetA = (parseInt($('.select2-dropdown').parent().css('top')) || 0);
+                    if (selectDropdownTopOffsetA < 0) {
+                        $('.select2-dropdown').parent().css('top', 0);
+                        var selectDropdownHeight = ($('.select2-dropdown').height() || 0);
+                        height = bodyHeight + selectDropdownHeight + 20;
+                    } else {
+                        var selectDropdownHeight = ($('.select2-dropdown').height() || 0);
+                        var selectDropdownTopOffset = (parseInt($('.select2-dropdown').parent().css('top')) || 0);
+
+                        if ((selectDropdownTopOffset + selectDropdownHeight) >= bodyHeight) {
+                            height = selectDropdownTopOffset + selectDropdownHeight + 20;
+                        }
+                    }
+
+                    // always 100% on card forms
+                    if ('cardform' in formData && formData.cardform) {
+                        return JFCustomWidget.requestFrameResize({
+                            width: '99.9%',
+                            height: height
+                        });
+                    }
+
+                    JFCustomWidget.requestFrameResize({
+                        width: $('body').width(),
+                        height: height
+                    });
                 }
 
                 function getDropdownClass(level) {
