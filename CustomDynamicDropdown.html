@@ -70,6 +70,8 @@
                 }
 
                 function init() {
+                    console.log("params2:", params);
+                    console.log("getWidgetSettings2:", JFCustomWidget.getWidgetSettings())
                     var tree = parseList(params.list);
                     showDropdown(tree);
                     if (formData && formData.value) {
