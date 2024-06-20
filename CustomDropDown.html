@@ -33,7 +33,7 @@
 
         window.addEventListener('load', function () {
 
-            function CustomDynamicDropdown(containerID, formData) {
+            function CustomDropdown(containerID, formData) {
                 var params = JFCustomWidget.getWidgetSettings();
                 var separator = (params.separator && params.separator != '<empty>' ? ' ' + params.separator + ' ' : "\n");
                 var list = [];
@@ -372,7 +372,7 @@
             }
 
             JFCustomWidget.subscribe('submit', function () {
-                var values = dynamicDropdown.getData();
+                var values = customDropDown.getData();
 
                 if (!values.valid) {
                     JFCustomWidget.showWidgetError("Please fill in this field");
@@ -382,12 +382,12 @@
             });
 
             JFCustomWidget.subscribe("reset", function () {
-                dynamicDropdown.clearValues();
+                customDropDown.clearValues();
             });
 
             JFCustomWidget.subscribe("ready", function (formData) {
-                var dynamicDropdown = new CustomDynamicDropdown("dropdownsContainer", formData);
-                dynamicDropdown.init();
+                var customDropDown = new CustomDropdown("dropdownsContainer", formData);
+                customDropDown.init();
             });
         });
 
