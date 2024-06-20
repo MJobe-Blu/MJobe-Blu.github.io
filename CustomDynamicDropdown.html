@@ -26,6 +26,11 @@
         window.addEventListener('load', function () {
             function CustomDynamicDropdown(containerID, formData) {
                 var params = JFCustomWidget.getWidgetSettings();
+                console.log("params:", params);
+                console.log("getWidgetSettings:", JFCustomWidget.getWidgetSettings())
+                console.log("separator1:", params?.separator)
+                console.log("separator2:", params?.Separator)
+
                 var separator = (params.separator && params.separator != '<empty>' ? ' ' + params.separator + ' ' : "\n");
                 var list = [];
 
