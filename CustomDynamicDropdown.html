@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -7,17 +8,18 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    
+
     <!-- Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    
+
     <!-- JotForm Custom Widget -->
     <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
-    
+
 </head>
+
 <body>
     <div id="dropdownsContainer"></div>
     <script>
@@ -75,7 +77,7 @@
                     console.log("params2:", params.lists);
                     console.log("getWidgetSettings2:", JFCustomWidget.getWidgetSettings())
                     var tree = parseList(params.lists);
-                    if (Object.entries(tree).length === 0 || tree === null){
+                    if (Object.entries(tree).length === 0 || tree === null) {
                         tree = parseList(params.lists);
                     }
                     showDropdown(tree);
@@ -286,6 +288,21 @@
 
                 function updateWidgetValue() {
                     JFCustomWidget.sendData(getData());
+                    // Get values from the first two dropdowns
+                    var firstDropdownValue = $('#dropdownsContainer select.dd-0').val();
+                    var secondDropdownValue = $('#dropdownsContainer select.dd-1').val();
+
+                    // Example array structure for setFieldsValueById
+                    var fillArr = [];
+                    if (firstDropdownValue !== null && secondDropdownValue !== null) {
+                        fillArr.push({ id: '8', value: firstDropdownValue });
+                        fillArr.push({ id: '9', value: secondDropdownValue });
+                    }
+
+                    // Set values using JFCustomWidget.setFieldsValueById()
+                    JFCustomWidget.setFieldsValueById(fillArr);
+
+                    console.log(fillArr); // Optional: Log the array for debugging purposes
                 }
 
                 function resizeIframe() {
@@ -359,4 +376,5 @@
         });
     </script>
 </body>
+
 </html>
