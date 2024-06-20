@@ -30,9 +30,7 @@
     <div id="dropdownsContainer"></div>
     <script>
         "use strict";
-
-        window.addEventListener('load', function () {
-
+        
             function CustomDynamicDropdown(containerID, formData) {
                 var params = JFCustomWidget.getWidgetSettings();
                 var separator = (params.separator && params.separator != '<empty>' ? ' ' + params.separator + ' ' : "\n");
@@ -430,8 +428,6 @@
                     JFCustomWidget.sendSubmit(widget.getData());
                 });
             });
-
-        });
     </script>
 </body>
 
