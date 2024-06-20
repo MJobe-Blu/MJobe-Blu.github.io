@@ -270,68 +270,168 @@
                             $('<option>', {
                                 'value': ""
                             }).html(selectEmpty[index]).prependTo($dropdown);
-                            $dropdown.val($($dropdown).find("option[selected]").val());
+                            $dropdown.val($($dropdown.attr("class") + " option:first").val());
                         }
                     }
 
-                    if (params.inputHint && params.inputHint != '<empty>') {
-                        $('<option>', {
-                            'value': ''
-                        }).html(params.inputHint).prependTo($dropdown);
-                    }
+                    // $dropdown.bind('change', function() {
+                    //   //change to String for object property
+                    //   showDropdown(node.values[changeToString(this.value)], level + 1);
+                    //   updateWidgetValue();
+                    // });
 
-                    $dropdown.on('change', function () {
-                        if (this.selectedIndex == 0) {
-                            // if the current dropdown is cleared, delete all descendants
-                            showDropdown([], level + 1);
-                        } else {
-                            var value = $(this).val();
-                            if (typeof value !== 'undefined') {
-                                showDropdown(node.values[value], level + 1);
-                                if (node.values[value].required) {
-                                    makeWidgetRequiredOrNot();
-                                }
+                    $dropdown.appendTo('#' + containerID);
+
+                    $dropdown.select2({
+                        placeholder: "Please select",
+                        dropdownPosition: 'below'
+                    }).on("select2:close", function () {
+                        resizeIframe();
+                    }).on("select2:open", function (e) {
+                        resizeIframe();
+                        /*
+                        //patch that addresses #4209507. We may need to refactor this to work better rather than firing the iframe resize twice.
+                        if(getAndroidVersion() === '11' || getAndroidVersion() === '12'){
+                          resizeIframe();
+                        }
+                        //end of patch
+                        $('.select2-dropdown').hide();
+                        setTimeout(function() {
+                
+                          var interval;
+                
+                          $('.select2-dropdown').fadeIn('fast', function() {
+                            if (interval) {
+                              clearInterval(interval);
                             }
+                          });
+                
+                          interval = setInterval(function() {
+                            resizeIframe();
+                          }, 50);
+                        }, 150);
+                        */
+                    }).on('select2:select', function (e) {
+                        var value = $(this).val();
+
+                        if (value) {
+                            showDropdown(node.values[changeToString(this.value)], level + 1);
+                            updateWidgetValue();
                         }
-                        updateWidgetValue();
+                    }).on('change.select2', function (e) {
+                        var value = $(this).val();
+
+                        if (value) {
+                            showDropdown(node.values[changeToString(this.value)], level + 1);
+                            updateWidgetValue();
+                        }
+
+                        var indexOfValue = list.map(function (o) { return o.value; }).indexOf(value);
+
+                        if (indexOfValue !== -1 && list[indexOfValue].required !== null) {
+                            JFCustomWidget.makeWidgetRequired();
+                        }
+
                     });
 
-                    $('#' + containerID).append($dropdown);
-                    if ($dropdown.length) {
-                        $dropdown.select2();
+                    // change to String for object property
+                    showDropdown(node.values[changeToString($dropdown.val())], level + 1);
+
+                    hideEmptySelect();
+                }
+
+                // returns combined class names for all levels from 0 to N (allowing us to easily drop child elements using level only)
+                function getDropdownClass(level) {
+                    var className = '';
+                    for (var i = 0; i <= level; i++) {
+                        className += 'dd-' + i + ' ';
                     }
+                    return className;
                 }
 
                 function updateWidgetValue() {
-                    var data = getData();
-                    JFCustomWidget.sendSubmit(data);
-                    JFCustomWidget.setWidgetValue(data.value);
-                }
-
-                function clearValues() {
-                    $('#' + containerID + ' select').val('').trigger('change.select2');
-                    resizeIframe();
-                }
-
-                function getDropdownClass(level) {
-                    return 'form-control dd-' + level;
+                    JFCustomWidget.sendData(getData());
                 }
 
                 function resizeIframe() {
-                    setTimeout(function () {
-                        JFCustomWidget.requestFrameResize();
-                    }, 300);
+                    if (!JFCustomWidget) {
+                        return false;
+                    }
+
+                    var bodyHeight = $('body').height();
+                    var height = bodyHeight;
+
+                    var selectDropdownTopOffsetA = (parseInt($('.select2-dropdown').parent().css('top')) || 0);
+                    if (selectDropdownTopOffsetA < 0) {
+                        $('.select2-dropdown').parent().css('top', 0);
+                        var selectDropdownHeight = ($('.select2-dropdown').height() || 0);
+                        height = bodyHeight + selectDropdownHeight + 20;
+                    } else {
+                        var selectDropdownHeight = ($('.select2-dropdown').height() || 0);
+                        var selectDropdownTopOffset = (parseInt($('.select2-dropdown').parent().css('top')) || 0);
+
+                        if ((selectDropdownTopOffset + selectDropdownHeight) >= bodyHeight) {
+                            height = selectDropdownTopOffset + selectDropdownHeight + 20;
+                        }
+                    }
+
+                    // always 100% on card forms
+                    if ('cardform' in formData && formData.cardform) {
+                        return JFCustomWidget.requestFrameResize({
+                            width: '99.9%',
+                            height: height
+                        });
+                    }
+
+                    JFCustomWidget.requestFrameResize({
+                        width: $('body').width(),
+                        height: height
+                    });
                 }
+
+                function hideEmptySelect() {
+                    $('#' + containerID + ' select').each(function (index, element) {
+                        if ($(element).val() == "") {
+                            if ($(element).find('option').length == 1 && $(element).find('option').text() == "") {
+                                $(element).hide();
+                                resizeIframe();
+                            }
+                        }
+                    });
+                }
+
+                function clearValues() {
+                    var level = 0;
+                    var selectsCount = $('#' + containerID + ' select').length;
+                    while (level <= selectsCount) {
+                        var dropdown = $('#' + containerID + ' select')[level];
+                        $(dropdown).val('').trigger('change.select2');
+                        level += 1;
+                    }
+                    resizeIframe();
+                }
+
+                //Detect Android version
+                function getAndroidVersion(ua) {
+                    ua = (ua || navigator.userAgent).toLowerCase();
+                    var match = ua.match(/android\s([0-9\.]*)/i);
+                    return match ? match[1] : undefined;
+                };
 
             }
 
-            var customDynamicDropdown = new CustomDynamicDropdown('dropdownsContainer', JFCustomWidget.getWidgetData());
-            JFCustomWidget.subscribe('ready', customDynamicDropdown.init);
-            JFCustomWidget.subscribe('submit', customDynamicDropdown.getData);
-            JFCustomWidget.subscribe('reset', customDynamicDropdown.clearValues);
+            JFCustomWidget.subscribe('ready', function (data) {
+                var widget = new CustomDynamicDropdown('dropdownsContainer', data);
+                widget.init();
+
+                JFCustomWidget.subscribe('clear', widget.clearValues);
+                JFCustomWidget.subscribe('submit', function () {
+                    JFCustomWidget.sendSubmit(widget.getData());
+                });
+            });
 
         });
-
     </script>
 </body>
+
 </html>
