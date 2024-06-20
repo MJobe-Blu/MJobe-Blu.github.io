@@ -75,7 +75,7 @@
                     console.log("params2:", params.list);
                     console.log("getWidgetSettings2:", JFCustomWidget.getWidgetSettings())
                     var tree = parseList(params.list);
-                    if (tree == "" || tree == null){
+                    if (tree == {} || tree == null){
                         tree = parseList(params.lists);
                     }
                     showDropdown(tree);
