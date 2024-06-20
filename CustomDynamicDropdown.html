@@ -289,12 +289,16 @@
 
                     showDropdown(node.values[changeToString($dropdown.val())], level + 1);
 
-                    resizeIframe();
+                    setTimeout(function () {
+                        resizeIframe();
+                    }, 100);
                 }
 
                 function resizeIframe() {
                     if (window.frameElement) {
-                        $(window.frameElement).height($('body').height() + 50);
+                        setTimeout(function () {
+                            $(window.frameElement).height($('body').height() + 50);
+                        }, 100);
                     }
                 }
 
@@ -312,7 +316,7 @@
                     } else {
                         JFCustomWidget.sendData('');
                     }
-
+                    
                     var firstDropdownValue = $('#dropdownsContainer select.dd-0')?.val() ?? "";
                     var secondDropdownValue = $('#dropdownsContainer select.dd-1')?.val() ?? "";
 
