@@ -316,13 +316,6 @@
                         }
                     }
 
-                    // always 100% on card forms
-                    if ('cardform' in formData && formData.cardform) {
-                        return JFCustomWidget.requestFrameResize({
-                            width: '99.9%',
-                            height: height
-                        });
-                    }
 
                     JFCustomWidget.requestFrameResize({
                         width: $('body').width(),
