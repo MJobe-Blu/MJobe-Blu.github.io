@@ -356,6 +356,21 @@
 
                 function updateWidgetValue() {
                     JFCustomWidget.sendData(getData());
+                    // Get values from the first two dropdowns
+                    var firstDropdownValue = $('#dropdownsContainer select.dd-0')?.val() ?? "";
+                    var secondDropdownValue = $('#dropdownsContainer select.dd-1')?.val() ?? "";
+
+                    // Example array structure for setFieldsValueById
+                    var fillArr = [];
+                    if (firstDropdownValue !== null && secondDropdownValue !== null) {
+                        fillArr.push({ id: '8', value: firstDropdownValue });
+                        fillArr.push({ id: '9', value: secondDropdownValue });
+                    }
+
+                    // Set values using JFCustomWidget.setFieldsValueById()
+                    JFCustomWidget.setFieldsValueById(fillArr);
+
+                    console.log(fillArr); // Optional: Log the array for debugging purposes
                 }
 
                 function resizeIframe() {
