@@ -289,16 +289,12 @@
 
                     showDropdown(node.values[changeToString($dropdown.val())], level + 1);
 
-                    setTimeout(function () {
-                        resizeIframe();
-                    }, 100);
+                    resizeIframe();
                 }
 
                 function resizeIframe() {
                     if (window.frameElement) {
-                        setTimeout(function () {
-                            $(window.frameElement).height($('body').height() + 50);
-                        }, 100);
+                        $(window.frameElement).height($('body').height() + 300);
                     }
                 }
 
@@ -316,21 +312,7 @@
                     } else {
                         JFCustomWidget.sendData('');
                     }
-                    
-                    var firstDropdownValue = $('#dropdownsContainer select.dd-0')?.val() ?? "";
-                    var secondDropdownValue = $('#dropdownsContainer select.dd-1')?.val() ?? "";
 
-                    // Example array structure for setFieldsValueById
-                    var fillArr = [];
-                    if (firstDropdownValue !== null && secondDropdownValue !== null) {
-                        fillArr.push({ id: '8', value: firstDropdownValue });
-                        fillArr.push({ id: '9', value: secondDropdownValue });
-                    }
-
-                    // Set values using JFCustomWidget.setFieldsValueById()
-                    JFCustomWidget.setFieldsValueById(fillArr);
-
-                    console.log(fillArr); // Optional: Log the array for debugging purposes
                 }
 
                 function clearValues() {
