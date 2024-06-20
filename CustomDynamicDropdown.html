@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    
-    <!-- Select2 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    
-    <!-- JotForm Custom Widget -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+
     <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
-    
-</head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+     <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        (function () {
+            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+            po.src = '//js.jotform.com/JotFormCustomWidget.min.js?onload=onLoadCallback';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+        })();
+    </script>
+  </head>
 <body>
     <div id="dropdownsContainer"></div>
     <script>
         "use strict";
 
         window.addEventListener('load', function () {
+
             function CustomDynamicDropdown(containerID, formData) {
                 var params = JFCustomWidget.getWidgetSettings();
-                console.log("params:", params);
-                console.log("getWidgetSettings:", JFCustomWidget.getWidgetSettings())
-                console.log("separator1:", params?.separator)
-                console.log("separator2:", params?.Separator)
-
                 var separator = (params.separator && params.separator != '<empty>' ? ' ' + params.separator + ' ' : "\n");
                 var list = [];
 
@@ -43,7 +47,10 @@
                     var values = [];
                     $('#' + containerID + ' select').each(function (index, element) {
                         values.push($(element).val());
-                        if ((JFCustomWidget.isWidgetRequired() || $(element).attr('required')) && !$(element).val()) {
+                        // if the item is required or the whole widget is required
+                        // and no value, make the values empty to trigger validation
+                        if ((JFCustomWidget.isWidgetRequired() ||
+                            $(element).attr('required')) && !$(element).val()) {
                             values = [];
                             return false;
                         }
@@ -72,10 +79,10 @@
                 function init() {
                     params = JFCustomWidget.getWidgetSettings();
                     console.log("params1:", params);
-                    console.log("params2:", params.lists);
+                    console.log("params2:", params.list);
                     console.log("getWidgetSettings2:", JFCustomWidget.getWidgetSettings())
-                    var tree = parseList(params.lists);
-                    if (Object.entries(tree).length === 0 || tree === null){
+                    var tree = parseList(params.list);
+                    if (Object.entries(obj).length === 0 || tree == null){
                         tree = parseList(params.lists);
                     }
                     showDropdown(tree);
@@ -94,6 +101,7 @@
                     var path = [];
                     var hasRequired = false;
 
+                    // var data = text.replace(/\r/, '').replace(/\n+/g, '\n').split('\n');
                     if (text) {
                         var data = text.split(/\r\n|\r|\n/g);
                         for (var index in data) {
@@ -102,6 +110,7 @@
                             var parentIndex = -1;
 
                             item = item.trim();
+                            // rendering issue with characters when many entries
                             item = item.replace(/&amp;amp;/g, "&")
                                 .replace(/&amp;#39;/g, "'")
                                 .replace(/&amp;lt;/g, "<")
@@ -113,6 +122,9 @@
                                 .replace(/&gt;/g, ">")
                                 .replace(/&quot;/g, '"');
 
+                            // add + to digit property of object
+
+                            // the last path element with depth smaller than my depth is my parent
                             for (var i = 0; i < path.length; i++) {
                                 if (depth <= path[i].depth) {
                                     break;
@@ -120,6 +132,7 @@
                                 parentIndex = i;
                             }
 
+                            // delete descendants of my parent (if any) and add myself instead
                             while (path.length > parentIndex + 1) {
                                 path.pop();
                             }
@@ -129,7 +142,8 @@
                                 'depth': depth,
                             });
 
-                            var isItemRequired = item.match(/^ *\*/);
+                            // list with node values and its parents will allow us to easily build a tree
+                            var isItemRequired = item.match(/^ *\*/); // "*" at the beginning stands for required value
                             if (!hasRequired && isItemRequired) {
                                 hasRequired = true;
                             }
@@ -142,6 +156,8 @@
                         }
                     }
 
+                    // make the widget required internally
+                    // if there's atleast one item is requred
                     if (hasRequired) {
                         makeWidgetRequiredOrNot();
                     }
@@ -159,20 +175,30 @@
 
                 function cleanValue(str) {
                     str = str.replace(/\r/, '').replace(/^ +/, '').replace(/ +$/, '').replace(/^\*/, '');
+
+                    // "." stands for empty value
                     if (str === '.') {
                         str = '';
                     }
+
+                    // added this for situation when number is required;
+                    // we should adding to all numbers + in the begin;
+                    // and checking + in position 0
                     return str;
                 }
 
                 function cleanValueForSetData(str) {
                     str = str.replace(/\r/, '').replace(/^ +/, '').replace(/ +$/, '').replace(/^\*$/, '');
+
+                    // "." stands for empty value
                     if (str === '.') {
                         str = '';
                     }
+
                     return str;
                 }
 
+                // recursive conversion from list to tree format
                 function getValuesForNode(list, parent) {
                     var out = {
                         'values': {},
@@ -183,6 +209,7 @@
                         var item = list[index];
                         if (item.parent === parent) {
                             out.values[item.value] = getValuesForNode(list, index);
+
                             if (item.parent !== null && list[item.parent].required) {
                                 out.required = true;
                             }
@@ -192,10 +219,12 @@
                     return out;
                 }
 
+                // for sorting digital properies for object
                 function changeToString(str) {
                     if (!isNaN(str) && str != "") {
                         str = str + '';
                     }
+
                     return str;
                 }
 
@@ -205,11 +234,14 @@
                     }
                 }
 
+                // display dropdown for a chosen node
                 function showDropdown(node, level) {
+
                     if (!level) {
                         level = 0;
                     }
 
+                    // elements of level N have all class names with levels 0..N so by removing level X we also remove all levels > X
                     $('#' + containerID + ' select.dd-' + level).select2('destroy');
                     $('#' + containerID + ' select.dd-' + level).remove();
                     if (!node || !Object.keys(node.values).length) {
@@ -223,10 +255,14 @@
                     });
 
                     var objectKeys = Object.keys(node.values);
+
+                    // this for save empty space and append to the begin of node
                     var selectEmpty = [];
 
                     for (var index in objectKeys) {
                         var key = objectKeys[index];
+
+                        // if key == select, save key and go to next iteration
                         if (key === "") {
                             selectEmpty.push(key);
                         } else {
@@ -236,6 +272,7 @@
                         }
                     }
 
+                    // append to the end select if exist
                     if (selectEmpty.length > 0) {
                         for (var index in selectEmpty) {
                             $('<option>', {
@@ -244,6 +281,12 @@
                             $dropdown.val($($dropdown.attr("class") + " option:first").val());
                         }
                     }
+
+                    // $dropdown.bind('change', function() {
+                    //   //change to String for object property
+                    //   showDropdown(node.values[changeToString(this.value)], level + 1);
+                    //   updateWidgetValue();
+                    // });
 
                     $dropdown.appendTo('#' + containerID);
 
@@ -254,28 +297,58 @@
                         resizeIframe();
                     }).on("select2:open", function (e) {
                         resizeIframe();
+                        /*
+                        //patch that addresses #4209507. We may need to refactor this to work better rather than firing the iframe resize twice.
+                        if(getAndroidVersion() === '11' || getAndroidVersion() === '12'){
+                          resizeIframe();
+                        }
+                        //end of patch
+                        $('.select2-dropdown').hide();
+                        setTimeout(function() {
+                
+                          var interval;
+                
+                          $('.select2-dropdown').fadeIn('fast', function() {
+                            if (interval) {
+                              clearInterval(interval);
+                            }
+                          });
+                
+                          interval = setInterval(function() {
+                            resizeIframe();
+                          }, 50);
+                        }, 150);
+                        */
                     }).on('select2:select', function (e) {
                         var value = $(this).val();
+
                         if (value) {
                             showDropdown(node.values[changeToString(this.value)], level + 1);
                             updateWidgetValue();
                         }
                     }).on('change.select2', function (e) {
                         var value = $(this).val();
+
                         if (value) {
                             showDropdown(node.values[changeToString(this.value)], level + 1);
                             updateWidgetValue();
                         }
+
                         var indexOfValue = list.map(function (o) { return o.value; }).indexOf(value);
+
                         if (indexOfValue !== -1 && list[indexOfValue].required !== null) {
                             JFCustomWidget.makeWidgetRequired();
                         }
+
                     });
 
+                    // change to String for object property
                     showDropdown(node.values[changeToString($dropdown.val())], level + 1);
+
                     hideEmptySelect();
                 }
 
+                // returns combined class names for all levels from 0 to N (allowing us to easily drop child elements using level only)
                 function getDropdownClass(level) {
                     var className = '';
                     for (var i = 0; i <= level; i++) {
@@ -286,9 +359,9 @@
 
                 function updateWidgetValue() {
                     JFCustomWidget.sendData(getData());
-                              // Get values from the first two dropdowns
-                              var firstDropdownValue = $('#dropdownsContainer select.dd-0').val();
-                    var secondDropdownValue = $('#dropdownsContainer select.dd-1').val();
+                    // Get values from the first two dropdowns
+                    var firstDropdownValue = $('#dropdownsContainer select.dd-0')?.val() ?? "";
+                    var secondDropdownValue = $('#dropdownsContainer select.dd-1')?.val() ?? "";
 
                     // Example array structure for setFieldsValueById
                     var fillArr = [];
@@ -312,66 +385,76 @@
                     var height = bodyHeight;
 
                     var selectDropdownTopOffsetA = (parseInt($('.select2-dropdown').parent().css('top')) || 0);
-                    var selectDropdownTopOffsetB = parseInt($('.select2-dropdown').css('top')) || 0;
-                    var selectDropdownBottomOffset = parseInt($('.select2-dropdown').css('bottom')) || 0;
+                    if (selectDropdownTopOffsetA < 0) {
+                        $('.select2-dropdown').parent().css('top', 0);
+                        var selectDropdownHeight = ($('.select2-dropdown').height() || 0);
+                        height = bodyHeight + selectDropdownHeight + 20;
+                    } else {
+                        var selectDropdownHeight = ($('.select2-dropdown').height() || 0);
+                        var selectDropdownTopOffset = (parseInt($('.select2-dropdown').parent().css('top')) || 0);
 
-                    if (selectDropdownTopOffsetA > 0) {
-                        height += selectDropdownTopOffsetA;
+                        if ((selectDropdownTopOffset + selectDropdownHeight) >= bodyHeight) {
+                            height = selectDropdownTopOffset + selectDropdownHeight + 20;
+                        }
                     }
 
-                    if (selectDropdownTopOffsetB > 0) {
-                        height += selectDropdownTopOffsetB;
-                    }
-
-                    if (selectDropdownBottomOffset < 0) {
-                        height += Math.abs(selectDropdownBottomOffset);
+                    // always 100% on card forms
+                    if ('cardform' in formData && formData.cardform) {
+                        return JFCustomWidget.requestFrameResize({
+                            width: '99.9%',
+                            height: height
+                        });
                     }
 
                     JFCustomWidget.requestFrameResize({
-                        height: height + 20,
+                        width: $('body').width(),
+                        height: height
+                    });
+                }
+
+                function hideEmptySelect() {
+                    $('#' + containerID + ' select').each(function (index, element) {
+                        if ($(element).val() == "") {
+                            if ($(element).find('option').length == 1 && $(element).find('option').text() == "") {
+                                $(element).hide();
+                                resizeIframe();
+                            }
+                        }
                     });
                 }
 
                 function clearValues() {
-                    $('#' + containerID).find('select').each(function (index, element) {
-                        $(element).select2('destroy');
-                        $(element).remove();
-                    });
-                    showDropdown(parseList(params.list));
-                    updateWidgetValue();
-                }
-
-                function hideEmptySelect() {
-                    var $select = $('#' + containerID + ' select');
-                    var hideSelect = $select.length - 1;
-
-                    for (var index = $select.length - 1; index >= 0; index--) {
-                        var hasSelectedOption = $($select[index]).val();
-                        if (hideSelect === index) {
-                            if (hasSelectedOption === "") {
-                                $($select[index]).remove();
-                                hideSelect -= 1;
-                            }
-                        }
+                    var level = 0;
+                    var selectsCount = $('#' + containerID + ' select').length;
+                    while (level <= selectsCount) {
+                        var dropdown = $('#' + containerID + ' select')[level];
+                        $(dropdown).val('').trigger('change.select2');
+                        level += 1;
                     }
+                    resizeIframe();
                 }
+
+                //Detect Android version
+                function getAndroidVersion(ua) {
+                    ua = (ua || navigator.userAgent).toLowerCase();
+                    var match = ua.match(/android\s([0-9\.]*)/i);
+                    return match ? match[1] : undefined;
+                };
+
             }
 
-            var Widget;
+            JFCustomWidget.subscribe('ready', function (data) {
+                var widget = new CustomDynamicDropdown('dropdownsContainer', data);
+                widget.init();
 
-            JFCustomWidget.subscribe("ready", function (data) {
-                Widget = new CustomDynamicDropdown("dropdownsContainer", data);
-                Widget.init();
+                JFCustomWidget.subscribe('clear', widget.clearValues);
+                JFCustomWidget.subscribe('submit', function () {
+                    JFCustomWidget.sendSubmit(widget.getData());
+                });
             });
 
-            JFCustomWidget.subscribe("submit", function () {
-                JFCustomWidget.sendSubmit(Widget.getData());
-            });
-
-            JFCustomWidget.subscribe("reset", function () {
-                Widget.clearValues();
-            });
         });
     </script>
 </body>
+
 </html>
