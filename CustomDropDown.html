@@ -363,13 +363,32 @@
                 }
             }
 
+            function getData() {
+                var values = [];
+                $('#' + "dropdownsContainer" + ' select').each(function (index, element) {
+                    values.push($(element).val());
+                    if ((JFCustomWidget.isWidgetRequired() ||
+                        $(element).attr('required')) && !$(element).val()) {
+                        values = [];
+                        return false;
+                    }
+                });
+
+                values = values.join(' ' + "|" + ' ');
+
+                return {
+                    valid: !!values,
+                    value: values
+                };
+            }
+
             JFCustomWidget.subscribe('submit', function () {
-                var values = customDropDown.getData();
+                var values = getData();
 
                 if (!values.valid) {
                     JFCustomWidget.showWidgetError("Please fill in this field");
                 } else {
-                    JFCustomWidget.sendSubmit(values.value);
+                    JFCustomWidget.sendSubmit(values);
                 }
             });
 
