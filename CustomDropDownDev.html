@@ -403,7 +403,7 @@
                 values = values.join(' ' + "|" + ' ');
 
                 return {
-                    valid: true,
+                    valid: !!values,
                     value: values
                 };
             }
@@ -414,6 +414,7 @@
                 if (!values.valid) {
                     JFCustomWidget.showWidgetError("Please fill in this field");
                 } else {
+                    JFCustomWidget.makeWidgetNotRequired();
                     JFCustomWidget.sendSubmit(values.value);
                 }
             });
