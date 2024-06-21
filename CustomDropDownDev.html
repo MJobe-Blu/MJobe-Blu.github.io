@@ -31,6 +31,15 @@
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
         })();
     </script>
+
+    <style>
+        .dropdown-row {
+            margin-bottom: 10px;
+        }
+        .dropdown-row select {
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
@@ -281,13 +290,6 @@
                     }).on("select2:open", function (e) {
                         resizeIframe();
                     }).on('select2:select', function (e) {
-                        var value = $(this).val();
-
-                        if (value) {
-                            showDropdown(node.values[changeToString(this.value)], level + 1);
-                            updateWidgetValue();
-                        }
-                    }).on('change.select2', function (e) {
                         var value = $(this).val();
 
                         if (value) {
