@@ -346,20 +346,19 @@
                         JFCustomWidget.sendData('');
                     }
 
+                    var fieldIds = params.fieldsToFill.split(",");
                     var firstDropdownValue = $('#dropdownsContainer select.dd-0')?.val() ?? "";
                     var secondDropdownValue = $('#dropdownsContainer select.dd-1')?.val() ?? "";
 
-                    // Example array structure for setFieldsValueById
                     var fillArr = [];
                     if (firstDropdownValue !== null && secondDropdownValue !== null) {
-                        fillArr.push({ id: '8', value: firstDropdownValue });
-                        fillArr.push({ id: '9', value: secondDropdownValue });
+                        fillArr.push({ id: fieldIds[0], value: firstDropdownValue });
+                        fillArr.push({ id: fieldIds[1], value: secondDropdownValue });
                     }
 
-                    // Set values using JFCustomWidget.setFieldsValueById()
                     JFCustomWidget.setFieldsValueById(fillArr);
 
-                    console.log(fillArr); // Optional: Log the array for debugging purposes
+                    console.log(fillArr);
                 }
 
                 function clearValues() {
