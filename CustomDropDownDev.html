@@ -391,7 +391,7 @@
 
             function getData() {
                 var values = [];
-                $('#' + containerID + ' select').each(function (index, element) {
+                $('#' + "dropdownsContainer" + ' select').each(function (index, element) {
                     values.push($(element).val());
                     if ((JFCustomWidget.isWidgetRequired() ||
                         $(element).attr('required')) && !$(element).val()) {
@@ -407,7 +407,7 @@
                     value: values
                 };
             }
-            
+
             JFCustomWidget.subscribe('submit', function () {
                 var values = getData();
 
