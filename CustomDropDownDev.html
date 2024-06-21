@@ -388,8 +388,7 @@
                 if (!values.valid) {
                     JFCustomWidget.showWidgetError("Please fill in this field");
                 } else {
-                    JFCustomWidget.sendSubmit(values.value);
-                    JFCustomWidget.makeWidgetNotRequired();
+                    JFCustomWidget.sendSubmit(values);
                 }
             });
 
