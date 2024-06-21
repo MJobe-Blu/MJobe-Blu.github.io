@@ -17,6 +17,13 @@
 
     <!-- JotForm Custom Widget -->
     <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script type="text/javascript">
         (function () {
             var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
@@ -27,7 +34,7 @@
 </head>
 
 <body>
-    <div id="dropdownsContainer"></div>
+    <div id="dropdownsContainer" class="container mt-3"></div>
     <script>
         "use strict";
 
@@ -43,7 +50,7 @@
                 this.getData = getData;
                 this.clearValues = clearValues;
 
-                console.log("Lib: ",JFCustomWidget)
+                console.log("Lib: ", JFCustomWidget)
 
                 function getData() {
                     var values = [];
@@ -229,7 +236,7 @@
                     }
 
                     var $dropdown = $('<select>', {
-                        'class': getDropdownClass(level),
+                        'class': getDropdownClass(level) + ' form-control', // Add Bootstrap form-control class
                         'required': node.required,
                     });
 
