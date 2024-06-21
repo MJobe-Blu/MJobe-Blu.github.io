@@ -17,13 +17,6 @@
 
     <!-- JotForm Custom Widget -->
     <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
-
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
     <script type="text/javascript">
         (function () {
             var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
@@ -31,33 +24,10 @@
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
         })();
     </script>
-
-    <style>
-        .container,
-        .container-fluid,
-        .container-lg,
-        .container-md,
-        .container-sm,
-        .container-xl {
-            width: 100%;
-            padding-right: 15px;
-            /* padding-left: 15px; */
-            margin-right: auto;
-            margin-left: 20px;
-        }
-
-
-        .mt-3,
-        .my-3 {
-            margin-top: 0px !important;
-        }
-    </style>
 </head>
 
 <body>
-    <div class="container mt-3">
-        <div class="row" id="dropdownsContainer"></div>
-    </div>
+    <div id="dropdownsContainer"></div>
     <script>
         "use strict";
 
@@ -73,7 +43,7 @@
                 this.getData = getData;
                 this.clearValues = clearValues;
 
-                console.log("Lib: ", JFCustomWidget)
+                console.log("Lib: ",JFCustomWidget)
 
                 function getData() {
                     var values = [];
@@ -258,13 +228,8 @@
                         return;
                     }
 
-                    // Create a new row div every two dropdowns
-                    if (level % 2 === 0) {
-                        $('#' + containerID).append('<div class="row dropdown-row"></div>');
-                    }
-
                     var $dropdown = $('<select>', {
-                        'class': getDropdownClass(level) + ' form-control col', // Add Bootstrap form-control class and col class
+                        'class': getDropdownClass(level),
                         'required': node.required,
                     });
 
@@ -292,7 +257,7 @@
                         }
                     }
 
-                    $dropdown.appendTo('#' + containerID + ' .dropdown-row:last'); // Append to the last row
+                    $dropdown.appendTo('#' + containerID);
 
                     $dropdown.select2({
                         placeholder: "Please select",
@@ -315,7 +280,16 @@
                             showDropdown(node.values[changeToString(this.value)], level + 1);
                             updateWidgetValue();
                         }
+
+                        var indexOfValue = list.map(function (o) { return o.value; }).indexOf(value);
+
+                        if (indexOfValue !== -1 && list[indexOfValue].required !== null) {
+                            JFCustomWidget.makeWidgetRequired();
+                        }
+
                     });
+
+                    showDropdown(node.values[changeToString($dropdown.val())], level + 1);
 
                     resizeIframe();
                 }
@@ -351,9 +325,9 @@
                     // }
 
                     JFCustomWidget.requestFrameResize({
-                        width: $('body').width(),
-                        //width: 250,
-                        height: height + 25
+                        //width: $('body').width(),
+                        width: 250,
+                        height: height + 15
                     });
                 }
 
