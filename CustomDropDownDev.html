@@ -33,18 +33,24 @@
     </script>
 
     <style>
-    .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
-        width: 100%;
-        padding-right: 15px;
-        /* padding-left: 15px; */
-        margin-right: auto;
-        margin-left: 20px;
-    }
+        .container,
+        .container-fluid,
+        .container-lg,
+        .container-md,
+        .container-sm,
+        .container-xl {
+            width: 100%;
+            padding-right: 15px;
+            /* padding-left: 15px; */
+            margin-right: auto;
+            margin-left: 20px;
+        }
 
 
-    .mt-3, .my-3 {
-    margin-top: 0px !important;
-    }
+        .mt-3,
+        .my-3 {
+            margin-top: 0px !important;
+        }
     </style>
 </head>
 
@@ -383,8 +389,27 @@
                 }
             }
 
+            function getData() {
+                var values = [];
+                $('#' + containerID + ' select').each(function (index, element) {
+                    values.push($(element).val());
+                    if ((JFCustomWidget.isWidgetRequired() ||
+                        $(element).attr('required')) && !$(element).val()) {
+                        values = [];
+                        return false;
+                    }
+                });
+
+                values = values.join(separator);
+
+                return {
+                    valid: !!values,
+                    value: values
+                };
+            }
+            
             JFCustomWidget.subscribe('submit', function () {
-                var values = customDropDown.getData();
+                var values = getData();
 
                 if (!values.valid) {
                     JFCustomWidget.showWidgetError("Please fill in this field");
