@@ -17,6 +17,17 @@
 
     <!-- JotForm Custom Widget -->
     <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
+    <style>
+        #dropdownsContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        #dropdownsContainer select {
+            width: 200px;
+        }
+    </style>
     <script type="text/javascript">
         (function () {
             var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
@@ -316,17 +327,8 @@
                         }
                     }
 
-                    // always 100% on card forms
-                    // if ('cardform' in formData && formData.cardform) {
-                    //     return JFCustomWidget.requestFrameResize({
-                    //         width: '99.9%',
-                    //         height: height
-                    //     });
-                    // }
-
                     JFCustomWidget.requestFrameResize({
-                        //width: $('body').width(),
-                        width: 250,
+                        width: '100%',
                         height: height + 15
                     });
                 }
