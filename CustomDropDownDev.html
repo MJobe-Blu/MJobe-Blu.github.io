@@ -34,7 +34,9 @@
 </head>
 
 <body>
-    <div id="dropdownsContainer" class="container mt-3"></div>
+    <div class="container mt-3">
+        <div class="row" id="dropdownsContainer"></div>
+    </div>
     <script>
         "use strict";
 
@@ -235,8 +237,13 @@
                         return;
                     }
 
+                    // Create a new row div every two dropdowns
+                    if (level % 2 === 0) {
+                        $('#' + containerID).append('<div class="row dropdown-row"></div>');
+                    }
+
                     var $dropdown = $('<select>', {
-                        'class': getDropdownClass(level) + ' form-control', // Add Bootstrap form-control class
+                        'class': getDropdownClass(level) + ' form-control col', // Add Bootstrap form-control class and col class
                         'required': node.required,
                     });
 
@@ -264,7 +271,7 @@
                         }
                     }
 
-                    $dropdown.appendTo('#' + containerID);
+                    $dropdown.appendTo('#' + containerID + ' .dropdown-row:last'); // Append to the last row
 
                     $dropdown.select2({
                         placeholder: "Please select",
@@ -287,16 +294,7 @@
                             showDropdown(node.values[changeToString(this.value)], level + 1);
                             updateWidgetValue();
                         }
-
-                        var indexOfValue = list.map(function (o) { return o.value; }).indexOf(value);
-
-                        if (indexOfValue !== -1 && list[indexOfValue].required !== null) {
-                            JFCustomWidget.makeWidgetRequired();
-                        }
-
                     });
-
-                    showDropdown(node.values[changeToString($dropdown.val())], level + 1);
 
                     resizeIframe();
                 }
