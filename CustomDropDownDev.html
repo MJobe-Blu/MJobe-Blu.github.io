@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- JotForm Custom Widget -->
+    <script src="//js.jotform.com/JotFormCustomWidget.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+            po.src = '//js.jotform.com/JotFormCustomWidget.min.js?onload=onLoadCallback';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+        })();
+    </script>
+</head>
+
+<body>
+    <div id="dropdownsContainer"></div>
+    <script>
+        "use strict";
+
+        window.addEventListener('load', function () {
+
+            function CustomDropdown(containerID, formData) {
+                var params = JFCustomWidget.getWidgetSettings();
+                var separator = (' ' + "|" + ' ');
+                var list = [];
+
+                // exposed functions
+                this.init = init;
+                this.getData = getData;
+                this.clearValues = clearValues;
+
+                console.log("Lib: ",JFCustomWidget)
+
+                function getData() {
+                    var values = [];
+                    $('#' + containerID + ' select').each(function (index, element) {
+                        values.push($(element).val());
+                        if ((JFCustomWidget.isWidgetRequired() ||
+                            $(element).attr('required')) && !$(element).val()) {
+                            values = [];
+                            return false;
+                        }
+                    });
+
+                    values = values.join(separator);
+
+                    return {
+                        valid: !!values,
+                        value: values
+                    };
+                }
+
+                function setData(data) {
+                    var level = 0;
+                    data = data.split(separator);
+                    for (var x in data) {
+                        var row = cleanValueForSetData(data[x]);
+                        var dropdown = $('#' + containerID + ' select')[level];
+                        $(dropdown).val(row).trigger('change.select2');
+                        level += 1;
+                    }
+                    resizeIframe();
+                }
+
+                function init() {
+                    params = JFCustomWidget.getWidgetSettings();
+                    var tree = parseList(params?.lists);
+                    showDropdown(tree);
+                    if (formData && formData.value) {
+                        setData(formData.value);
+                    } else if ($('#' + containerID + ' select option:selected').val()) {
+                        updateWidgetValue();
+                    }
+                    if (!$('#' + containerID + ' select option:selected').val() && !JFCustomWidget.isWidgetRequired()) {
+                        JFCustomWidget.makeWidgetNotRequired();
+                    }
+                    $(window).on('resize', resizeIframe);
+                }
+
+                function parseList(text) {
+                    var path = [];
+                    var hasRequired = false;
+
+                    if (text) {
+                        var data = text.split(/\r\n|\r|\n/g);
+                        for (var index in data) {
+                            var item = data[index];
+                            var depth = getDepth(item);
+                            var parentIndex = -1;
+
+                            item = item.trim();
+                            item = item.replace(/&amp;amp;/g, "&")
+                                .replace(/&amp;#39;/g, "'")
+                                .replace(/&amp;lt;/g, "<")
+                                .replace(/&amp;gt;/g, ">")
+                                .replace(/&amp;quot;/g, '"')
+                                .replace(/&amp;/g, "&")
+                                .replace(/&#39;/g, "'")
+                                .replace(/&lt;/g, "<")
+                                .replace(/&gt;/g, ">")
+                                .replace(/&quot;/g, '"');
+
+                            for (var i = 0; i < path.length; i++) {
+                                if (depth <= path[i].depth) {
+                                    break;
+                                }
+                                parentIndex = i;
+                            }
+
+                            while (path.length > parentIndex + 1) {
+                                path.pop();
+                            }
+
+                            path.push({
+                                'index': index,
+                                'depth': depth,
+                            });
+
+                            var isItemRequired = item.match(/^ *\*/);
+                            if (!hasRequired && isItemRequired) {
+                                hasRequired = true;
+                            }
+
+                            list.push({
+                                'value': cleanValue(item),
+                                'parent': parentIndex >= 0 ? Number(path[parentIndex].index) : null,
+                                'required': isItemRequired
+                            });
+                        }
+                    }
+
+                    if (hasRequired) {
+                        makeWidgetRequiredOrNot();
+                    }
+
+                    return getValuesForNode(list, null);
+                }
+
+                function getDepth(str) {
+                    var depth = 0;
+                    while (str[depth] === ' ') {
+                        depth++;
+                    }
+                    return depth;
+                }
+
+                function cleanValue(str) {
+                    str = str.replace(/\r/, '').replace(/^ +/, '').replace(/ +$/, '').replace(/^\*/, '');
+
+                    if (str === '.') {
+                        str = '';
+                    }
+
+                    return str;
+                }
+
+                function cleanValueForSetData(str) {
+                    str = str.replace(/\r/, '').replace(/^ +/, '').replace(/ +$/, '').replace(/^\*$/, '');
+
+                    if (str === '.') {
+                        str = '';
+                    }
+
+                    return str;
+                }
+
+                function getValuesForNode(list, parent) {
+                    var out = {
+                        'values': {},
+                        'required': false,
+                    };
+
+                    for (var index = 0; index < list.length; index++) {
+                        var item = list[index];
+                        if (item.parent === parent) {
+                            out.values[item.value] = getValuesForNode(list, index);
+
+                            if (item.parent !== null && list[item.parent].required) {
+                                out.required = true;
+                            }
+                        }
+                    }
+
+                    return out;
+                }
+
+                function changeToString(str) {
+                    if (!isNaN(str) && str != "") {
+                        str = str + '';
+                    }
+
+                    return str;
+                }
+
+                function makeWidgetRequiredOrNot() {
+                    if (!JFCustomWidget.isWidgetRequired()) {
+                        JFCustomWidget.makeWidgetRequired();
+                    }
+                }
+
+                function showDropdown(node, level) {
+                    if (!level) {
+                        level = 0;
+                    }
+
+                    if (level > 0 && $('#' + containerID + ' select.dd-' + (level - 1)).val() === "") {
+                        return;
+                    }
+
+                    $('#' + containerID + ' select.dd-' + level).select2('destroy');
+                    $('#' + containerID + ' select.dd-' + level).remove();
+                    if (!node || !Object.keys(node.values).length) {
+                        resizeIframe();
+                        return;
+                    }
+
+                    var $dropdown = $('<select>', {
+                        'class': getDropdownClass(level),
+                        'required': node.required,
+                    });
+
+                    var objectKeys = Object.keys(node.values);
+                    var selectEmpty = [];
+
+                    for (var index in objectKeys) {
+                        var key = objectKeys[index];
+
+                        if (key === "") {
+                            selectEmpty.push(key);
+                        } else {
+                            $('<option>', {
+                                'value': key,
+                            }).html(key).appendTo($dropdown);
+                        }
+                    }
+
+                    if (selectEmpty.length > 0) {
+                        for (var index in selectEmpty) {
+                            $('<option>', {
+                                'value': ""
+                            }).html(selectEmpty[index]).prependTo($dropdown);
+                            $dropdown.val($($dropdown.attr("class") + " option:first").val());
+                        }
+                    }
+
+                    $dropdown.appendTo('#' + containerID);
+
+                    $dropdown.select2({
+                        placeholder: "Please select",
+                        dropdownPosition: 'below'
+                    }).on("select2:close", function () {
+                        resizeIframe();
+                    }).on("select2:open", function (e) {
+                        resizeIframe();
+                    }).on('select2:select', function (e) {
+                        var value = $(this).val();
+
+                        if (value) {
+                            showDropdown(node.values[changeToString(this.value)], level + 1);
+                            updateWidgetValue();
+                        }
+                    }).on('change.select2', function (e) {
+                        var value = $(this).val();
+
+                        if (value) {
+                            showDropdown(node.values[changeToString(this.value)], level + 1);
+                            updateWidgetValue();
+                        }
+
+                        var indexOfValue = list.map(function (o) { return o.value; }).indexOf(value);
+
+                        if (indexOfValue !== -1 && list[indexOfValue].required !== null) {
+                            JFCustomWidget.makeWidgetRequired();
+                        }
+
+                    });
+
+                    showDropdown(node.values[changeToString($dropdown.val())], level + 1);
+
+                    resizeIframe();
+                }
+
+                function resizeIframe() {
+                    if (!JFCustomWidget) {
+                        return false;
+                    }
+
+                    var bodyHeight = $('body').height();
+                    var height = bodyHeight;
+
+                    var selectDropdownTopOffsetA = (parseInt($('.select2-dropdown').parent().css('top')) || 0);
+                    if (selectDropdownTopOffsetA < 0) {
+                        $('.select2-dropdown').parent().css('top', 0);
+                        var selectDropdownHeight = ($('.select2-dropdown').height() || 0);
+                        height = bodyHeight + selectDropdownHeight + 20;
+                    } else {
+                        var selectDropdownHeight = ($('.select2-dropdown').height() || 0);
+                        var selectDropdownTopOffset = (parseInt($('.select2-dropdown').parent().css('top')) || 0);
+
+                        if ((selectDropdownTopOffset + selectDropdownHeight) >= bodyHeight) {
+                            height = selectDropdownTopOffset + selectDropdownHeight + 20;
+                        }
+                    }
+
+                    // always 100% on card forms
+                    // if ('cardform' in formData && formData.cardform) {
+                    //     return JFCustomWidget.requestFrameResize({
+                    //         width: '99.9%',
+                    //         height: height
+                    //     });
+                    // }
+
+                    JFCustomWidget.requestFrameResize({
+                        //width: $('body').width(),
+                        width: 250,
+                        height: height + 15
+                    });
+                }
+
+                function getDropdownClass(level) {
+                    var className = 'dd-' + level;
+
+                    return className;
+                }
+
+                function updateWidgetValue() {
+                    JFCustomWidget.sendData(getData());
+                    var fieldIds = params?.fieldsToFill?.split(",");
+                    var firstDropdownValue = $('#dropdownsContainer select.dd-0')?.val() ?? "";
+                    var secondDropdownValue = $('#dropdownsContainer select.dd-1')?.val() ?? "";
+
+                    var fillArr = [];
+                    if (firstDropdownValue !== null && secondDropdownValue !== null) {
+                        fillArr.push({ id: fieldIds[0], value: firstDropdownValue });
+                        fillArr.push({ id: fieldIds[1], value: secondDropdownValue });
+                    }
+
+                    JFCustomWidget.setFieldsValueById(fillArr);
+
+                    console.log(fillArr);
+                }
+
+                function clearValues() {
+                    var selects = $('#' + containerID + ' select');
+
+                    if (selects.length) {
+                        selects.val(null).trigger('change.select2');
+                    }
+                }
+            }
+
+            JFCustomWidget.subscribe('submit', function () {
+                var values = customDropDown.getData();
+
+                if (!values.valid) {
+                    JFCustomWidget.showWidgetError("Please fill in this field");
+                } else {
+                    JFCustomWidget.sendSubmit(values.value);
+                }
+            });
+
+            JFCustomWidget.subscribe("reset", function () {
+                customDropDown.clearValues();
+            });
+
+            JFCustomWidget.subscribe("ready", function (formData) {
+                var customDropDown = new CustomDropdown("dropdownsContainer", formData);
+                customDropDown.init();
+            });
+        });
+
+    </script>
+</body>
+
+</html>
