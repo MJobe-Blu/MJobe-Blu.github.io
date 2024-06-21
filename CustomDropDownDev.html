@@ -33,12 +33,18 @@
     </script>
 
     <style>
-        .dropdown-row {
-            margin-bottom: 10px;
-        }
-        .dropdown-row select {
-            width: 100%;
-        }
+    .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
+        width: 100%;
+        padding-right: 15px;
+        /* padding-left: 15px; */
+        margin-right: auto;
+        margin-left: 20px;
+    }
+
+
+    .mt-3, .my-3 {
+    margin-top: 0px !important;
+    }
     </style>
 </head>
 
@@ -290,6 +296,13 @@
                     }).on("select2:open", function (e) {
                         resizeIframe();
                     }).on('select2:select', function (e) {
+                        var value = $(this).val();
+
+                        if (value) {
+                            showDropdown(node.values[changeToString(this.value)], level + 1);
+                            updateWidgetValue();
+                        }
+                    }).on('change.select2', function (e) {
                         var value = $(this).val();
 
                         if (value) {
