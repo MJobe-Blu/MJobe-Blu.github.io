@@ -338,14 +338,7 @@
                 }
 
                 function updateWidgetValue() {
-                    var data = getData();
-
-                    if (data.valid) {
-                        JFCustomWidget.sendData(data.value);
-                    } else {
-                        JFCustomWidget.sendData('');
-                    }
-
+                    JFCustomWidget.sendData(getData());
                     var fieldIds = params?.fieldsToFill?.split(",");
                     var firstDropdownValue = $('#dropdownsContainer select.dd-0')?.val() ?? "";
                     var secondDropdownValue = $('#dropdownsContainer select.dd-1')?.val() ?? "";
