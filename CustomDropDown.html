@@ -346,7 +346,7 @@
                         JFCustomWidget.sendData('');
                     }
 
-                    var fieldIds = params.fieldsToFill.split(",");
+                    var fieldIds = params?.fieldsToFill?.split(",");
                     var firstDropdownValue = $('#dropdownsContainer select.dd-0')?.val() ?? "";
                     var secondDropdownValue = $('#dropdownsContainer select.dd-1')?.val() ?? "";
 
