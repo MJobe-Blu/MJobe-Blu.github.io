@@ -117,6 +117,7 @@
         var bodyWidth = 0;
         var bodyHeight = 0;
         var selectedLocation;
+        var studentIdProcessed;
 
         // Object to track input validation state
         var _data = {
@@ -209,8 +210,8 @@
                 */
                 function showSuccessMessage(data) {
                     loadingSpinner.style.display = "none";
-                    $("#input_profitCentre").val(`Student Found!`);
-                    profitCentreValue = `Student Found!`;
+                    $("#input_profitCentre").val(`Student ID: ${studentIdProcessed} Found!`);
+                    profitCentreValue = `Student ID: ${studentIdProcessed} Found!`;
                     _data.value = profitCentreValue;
                     JFCustomWidget.sendData(`${_data}`);
                 }
@@ -222,7 +223,7 @@
                     errorMessage.style.display = "flex";
                     loadingSpinner.style.display = "none";
                     profitCentreInput.value = "";
-                    errorMessage.textContent = "PROFIT CENTRE NUMBER NOT FOUND";
+                    errorMessage.textContent = `Student ID: ${studentIdProcessed} Not Found!`;
                     profitCentreValue = "";
                     _data.value = profitCentreValue;
                     JFCustomWidget.sendData(`${_data}`);
@@ -247,16 +248,19 @@
                         .then(response => {
                             if (!response.ok) {
                                 return response.json().then(err => {
+                                    studentIdProcessed = valueToValidate;
                                     throw new Error(err.message || `HTTP error! status: ${response.status}`);
                                 });
                             }
                             return response.json();
                         })
                         .then(data => {
+                            studentIdProcessed = valueToValidate;
                             processSubmission(data);
                             showSuccessMessage(data);
                         })
                         .catch(error => {
+                            studentIdProcessed = valueToValidate;
                             console.error(error);
                             showErrorMessage();
                         });
