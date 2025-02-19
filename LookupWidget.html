@@ -171,7 +171,7 @@
                     if (formData.value !== undefined && formData.value !== "") {
                         // If formData.value is defined, attempt to fetch signers and match the selected value
                         try {
-                            JFCustomWidget.getFieldsValueByName(["hiddenConcatLocation"], function (res) {
+                            JFCustomWidget.getFieldsValueByName(["hiddenStudent"], function (res) {
                                 console.log("res by Name= ", res.data[0].value);
 
                                 selectedLocation = res.data[0].value;
@@ -182,7 +182,7 @@
                         }
                     } else {
                         // Fetch location if no prefilled value exists
-                        JFCustomWidget.getFieldsValueByName(["hiddenConcatLocation"], function (res) {
+                        JFCustomWidget.getFieldsValueByName(["hiddenStudent"], function (res) {
                             console.log("res by Name= ", res.data[0].value);
 
                             selectedLocation = res.data[0].value;
@@ -270,7 +270,7 @@
 
                     selectedJotfromValue = data.value || "";
 
-                    const formatRegex = /^\d{2}-\d{3}$/;
+                    const formatRegex = /^\d{6}$/;
 
                     if (selectedJotfromValue) {
                         if (formatRegex.test(selectedJotfromValue)) {
