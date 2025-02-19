@@ -284,7 +284,7 @@
                         return [];
                     }
 
-                    const submission = response.content[0]; // Get the first result
+                    const submission = response.content[0];
                     const answers = submission.answers;
                     let fields = [];
 
@@ -292,6 +292,10 @@
                         if (answers.hasOwnProperty(key)) {
                             let question = answers[key];
                             let value = question.prettyFormat || question.answer || "";
+
+                            if (question.type === "control_address" && typeof value === "string") {
+                                value = value.replace(/<br>/g, "\n").replace(/Street Address: |Street Address Line 2: |City: |State \/ Province: |Postal \/ Zip Code: /g, "");
+                            }
 
                             fields.push({
                                 label: question.text,
