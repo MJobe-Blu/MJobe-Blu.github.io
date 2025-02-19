@@ -267,8 +267,8 @@
                     }
 
                     data.content.forEach(entry => {
-                        const courseId = entry.answers["4"].text;
-                        const courseName = entry.answers["3"].text;
+                        const courseId = entry.answers["4"].answer;
+                        const courseName = entry.answers["3"].answer;
 
                         const option = document.createElement("option");
                         option.value = courseId;
@@ -309,17 +309,17 @@
 
                     let selectedCourse = null;
                     dataReturnedFromCall?.content?.forEach(entry => {
-                        if (entry.answers["4"].text === signerSelect.value) {
+                        if (entry.answers["4"].answer === signerSelect.value) {
                             selectedCourse = entry.answers;
                         }
                     });
 
                     if (selectedCourse) {
                         JFCustomWidget.setFieldsValueByLabel([
-                            { label: "Course Name", value: selectedCourse["3"].text },
-                            { label: "Course ID", value: selectedCourse["4"].text },
-                            { label: "Course Owner", value: selectedCourse["5"].text },
-                            { label: "Course Owner Email", value: selectedCourse["6"].text }
+                            { label: "Course Name", value: selectedCourse["3"].answer },
+                            { label: "Course ID", value: selectedCourse["4"].answer },
+                            { label: "Course Owner", value: selectedCourse["5"].answer },
+                            { label: "Course Owner Email", value: selectedCourse["6"].answer }
                         ]);
                     }
                 }
