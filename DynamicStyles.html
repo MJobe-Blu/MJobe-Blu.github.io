@@ -65,7 +65,9 @@
                 document.getElementById('stylesConfig').addEventListener('change', saveSettings);
                 document.getElementById('companyFieldId').addEventListener('change', saveSettings);
                 
-                JFCustomWidget.subscribe("formValueChanged", handleFormValueChange);
+                JFCustomWidget.subscribe('populate', handleFormValueChange);
+
+                //JFCustomWidget.subscribe("formValueChanged", handleFormValueChange);
             });
         }
         
@@ -80,12 +82,10 @@
         }
         
         function handleFormValueChange(data) {
-            if (data.fieldID === companyFieldId) {
                 const companyName = data.value;
                 document.getElementById('currentCompany').textContent = companyName || 'None selected';
                 
                 applyCompanyStyles(companyName);
-            }
         }
         
         function applyCompanyStyles(companyName) {
