@@ -41,13 +41,8 @@
         // Global variables
         let stylesConfig = {};
         let companyFieldId = '';
-        let JFCustomWidget;
         
         function onLoadCallback() {
-            JFCustomWidget = JotformCustomWidget.initialize({
-                "frameHeight": 300,
-                "widgetId": ""
-            });
             
             // Ready event
             JFCustomWidget.subscribe("ready", function() {
