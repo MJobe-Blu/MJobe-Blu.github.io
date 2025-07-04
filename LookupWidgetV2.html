@@ -303,8 +303,9 @@
                         if (fieldMapping && fieldMapping.includes(':')) {
                             const [fieldId, fieldName] = fieldMapping.split(':');
 
-                            if (answers.hasOwnProperty(fieldName)) {
-                                let question = answers[fieldName];
+                            const question = answers.find(answer => answer.name === fieldName);
+
+                            if (question) {
                                 let value = question.prettyFormat || question.answer || "";
 
                                 if (question.type === "control_address" && typeof value === "string") {
