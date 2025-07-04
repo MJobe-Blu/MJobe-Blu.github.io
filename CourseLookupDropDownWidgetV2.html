@@ -315,12 +315,37 @@
                     });
 
                     if (selectedCourse) {
-                        JFCustomWidget.setFieldsValueByLabel([
-                            { label: "Course Name", value: selectedCourse["3"].answer },
-                            { label: "Course ID", value: selectedCourse["4"].answer },
-                            { label: "Course Owner", value: selectedCourse["5"].answer },
-                            { label: "Course Owner Email", value: selectedCourse["6"].answer }
-                        ]);
+                        const fieldMappings = [
+                            params.field1, // e.g., "input_3:courseName"
+                            params.field2, // e.g., "input_4:courseId"
+                            params.field3, // e.g., "input_5:courseOwner"
+                            params.field4  // e.g., "input_6:courseOwnerEmail"
+                        ];
+
+                        let fields = [];
+
+                        fieldMappings.forEach(fieldMapping => {
+                            if (fieldMapping && fieldMapping.includes(':')) {
+                                const [fieldId, fieldName] = fieldMapping.split(':');
+                                const question = Object.values(selectedCourse).find(answer => answer.name === fieldName);
+
+                                if (question) {
+                                    let value = question.prettyFormat || question.answer || "";
+
+                                    if (question.type === "control_address" && typeof value === "string") {
+                                        value = value.replace(/<br>/g, "\n")
+                                            .replace(/Street Address: |Street Address Line 2: |City: |State \/ Province: |Postal \/ Zip Code: /g, "");
+                                    }
+
+                                    fields.push({
+                                        id: fieldId,
+                                        value: value
+                                    });
+                                }
+                            }
+                        });
+
+                        JFCustomWidget.setFieldsValueById(fields);
                     }
                 }
 
@@ -330,7 +355,7 @@
                 function fetchSigners() {
                     notFoundMessage.style.display = "none";
 
-                    const apiUrl = `https://eu-api.jotform.com/form/250493468935065/submissions?apiKey=${params.apiKey}`;
+                    const apiUrl = `${params.tableUrl}?apiKey=${params.apiKey}`;
 
                     showLoadingMessage();
 
