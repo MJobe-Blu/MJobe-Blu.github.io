@@ -284,22 +284,12 @@
                 }
 
                 function processSubmission(response) {
-                    const rawFieldParams = {
-                        field1: params.field1,
-                        field2: params.field2,
-                        field3: params.field3
-                    };
-
-                    const fieldIds = {};
-                    const idToAnswerKey = {};
-
-                    for (const [fieldKey, value] of Object.entries(rawFieldParams)) {
-                        if (value && value.includes(":")) {
-                            const [fieldId, answerKey] = value.split(":");
-                            fieldIds[fieldKey] = fieldId;
-                            idToAnswerKey[fieldId] = { fieldKey, answerKey };
-                        }
-                    }
+                    // params.field1, params.field2, params.field3 contain "FieldID:FieldName" format
+                    const fieldMappings = [
+                        params.field1, // e.g., "input_3:studentId"
+                        params.field2, // e.g., "input_4:name"
+                        params.field3  // e.g., "input_5:dateOf"
+                    ];
 
                     if (!response || !response.content || response.content.length === 0) {
                         return [];
@@ -309,23 +299,26 @@
                     const answers = submission.answers;
                     let fields = [];
 
-                    for (let key in answers) {
-                        if (answers.hasOwnProperty(key) && idToAnswerKey[key]) {
-                            const question = answers[key];
-                            let value = question.prettyFormat || question.answer || "";
+                    fieldMappings.forEach(fieldMapping => {
+                        if (fieldMapping && fieldMapping.includes(':')) {
+                            const [fieldId, fieldName] = fieldMapping.split(':');
 
-                            if (question.type === "control_address" && typeof value === "string") {
-                                value = value.replace(/<br>/g, "\n").replace(/Street Address: |Street Address Line 2: |City: |State \/ Province: |Postal \/ Zip Code: /g, "");
+                            if (answers.hasOwnProperty(fieldName)) {
+                                let question = answers[fieldName];
+                                let value = question.prettyFormat || question.answer || "";
+
+                                if (question.type === "control_address" && typeof value === "string") {
+                                    value = value.replace(/<br>/g, "\n")
+                                        .replace(/Street Address: |Street Address Line 2: |City: |State \/ Province: |Postal \/ Zip Code: /g, "");
+                                }
+
+                                fields.push({
+                                    id: fieldId,
+                                    value: value
+                                });
                             }
-
-                            const { fieldKey } = idToAnswerKey[key];
-
-                            fields.push({
-                                id: fieldKey,
-                                value: value
-                            });
                         }
-                    }
+                    });
 
                     JFCustomWidget.setFieldsValueById(fields);
                 }
