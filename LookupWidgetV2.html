@@ -284,7 +284,11 @@
                 }
 
                 function processSubmission(response) {
-                    const fieldIds = params;
+                    const fieldIds = {
+                        field1: params.field1,
+                        field2: params.field2,
+                        field3: params.field3
+                    };
 
                     if (!response || !response.content || response.content.length === 0) {
                         return [];
@@ -307,10 +311,10 @@
                                 value = value.replace(/<br>/g, "\n").replace(/Street Address: |Street Address Line 2: |City: |State \/ Province: |Postal \/ Zip Code: /g, "");
                             }
 
-                            const id = idToField[key]
+                            const currentId = idToField[key] || question.text;
 
                             fields.push({
-                                id: id,
+                                id: currentId,
                                 value: value
                             });
                         }
@@ -318,6 +322,7 @@
 
                     JFCustomWidget.setFieldsValueById(fields);
                 }
+
 
                 /**
                 * Adjusts the iframe size dynamically based on the window.innerWidth and the window.innerHeight.
