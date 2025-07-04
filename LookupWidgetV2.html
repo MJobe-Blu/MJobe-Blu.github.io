@@ -303,7 +303,7 @@
                         if (fieldMapping && fieldMapping.includes(':')) {
                             const [fieldId, fieldName] = fieldMapping.split(':');
 
-                            const question = answers.find(answer => answer.name === fieldName);
+                            const question = Object.values(answers).find(answer => answer.name === fieldName);
 
                             if (question) {
                                 let value = question.prettyFormat || question.answer || "";
