@@ -237,7 +237,7 @@
                 function validateProfitCentre(valueToValidate) {
                     showLoadingMessage();
 
-                    const apiUrl = `https://eu-api.jotform.com/form/250493066821053/submissions?apiKey=${params.apiKey}&filter=%7B%22q3:eq%22:%22${valueToValidate}%22,%22status:ne%22:[%22ARCHIVED%22,%22DELETED%22]%7D`;
+                    const apiUrl = `${params.tableUrl}?apiKey=${params.apiKey}&filter=%7B%22q3:eq%22:%22${valueToValidate}%22,%22status:ne%22:[%22ARCHIVED%22,%22DELETED%22]%7D`;
 
                     fetch(apiUrl, {
                         method: "GET",
@@ -284,9 +284,15 @@
                 }
 
                 function processSubmission(response) {
+                    const fieldIds = params;
+
                     if (!response || !response.content || response.content.length === 0) {
                         return [];
                     }
+
+                    const idToField = Object.fromEntries(
+                        Object.entries(fieldIds).map(([key, value]) => [value, key])
+                    );
 
                     const submission = response.content[0];
                     const answers = submission.answers;
@@ -301,14 +307,16 @@
                                 value = value.replace(/<br>/g, "\n").replace(/Street Address: |Street Address Line 2: |City: |State \/ Province: |Postal \/ Zip Code: /g, "");
                             }
 
+                            const id = idToField[key]
+
                             fields.push({
-                                label: question.text,
+                                id: id,
                                 value: value
                             });
                         }
                     }
 
-                    JFCustomWidget.setFieldsValueByLabel(fields);
+                    JFCustomWidget.setFieldsValueById(fields);
                 }
 
                 /**
