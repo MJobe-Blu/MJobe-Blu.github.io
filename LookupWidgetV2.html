@@ -284,37 +284,44 @@
                 }
 
                 function processSubmission(response) {
-                    const fieldIds = {
+                    const rawFieldParams = {
                         field1: params.field1,
                         field2: params.field2,
                         field3: params.field3
                     };
 
+                    const fieldIds = {};
+                    const idToAnswerKey = {};
+
+                    for (const [fieldKey, value] of Object.entries(rawFieldParams)) {
+                        if (value && value.includes(":")) {
+                            const [fieldId, answerKey] = value.split(":");
+                            fieldIds[fieldKey] = fieldId;
+                            idToAnswerKey[fieldId] = { fieldKey, answerKey };
+                        }
+                    }
+
                     if (!response || !response.content || response.content.length === 0) {
                         return [];
                     }
-
-                    const idToField = Object.fromEntries(
-                        Object.entries(fieldIds).map(([key, value]) => [value, key])
-                    );
 
                     const submission = response.content[0];
                     const answers = submission.answers;
                     let fields = [];
 
                     for (let key in answers) {
-                        if (answers.hasOwnProperty(key)) {
-                            let question = answers[key];
+                        if (answers.hasOwnProperty(key) && idToAnswerKey[key]) {
+                            const question = answers[key];
                             let value = question.prettyFormat || question.answer || "";
 
                             if (question.type === "control_address" && typeof value === "string") {
                                 value = value.replace(/<br>/g, "\n").replace(/Street Address: |Street Address Line 2: |City: |State \/ Province: |Postal \/ Zip Code: /g, "");
                             }
 
-                            const currentId = idToField[key] || question.text;
+                            const { fieldKey } = idToAnswerKey[key];
 
                             fields.push({
-                                id: currentId,
+                                id: fieldKey,
                                 value: value
                             });
                         }
@@ -322,7 +329,6 @@
 
                     JFCustomWidget.setFieldsValueById(fields);
                 }
-
 
                 /**
                 * Adjusts the iframe size dynamically based on the window.innerWidth and the window.innerHeight.
